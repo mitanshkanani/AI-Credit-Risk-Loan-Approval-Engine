@@ -1,0 +1,50 @@
+{
+  "model": "M0",
+  "name": "Dummy baseline",
+  "estimator": "sklearn.dummy.DummyClassifier",
+  "parameters": {
+    "constant": null,
+    "random_state": null,
+    "strategy": "prior"
+  },
+  "learned_prior_default": 0.17243973575455268,
+  "versions": "A and B identical (no features used)",
+  "test_split": "sealed",
+  "environment": {
+    "python": "3.13.9",
+    "pandas": "2.3.3",
+    "scikit_learn": "1.7.2"
+  },
+  "metrics": {
+    "train": {
+      "rows": 388124,
+      "defaults": 66928,
+      "default_rate": 0.17243973575455268,
+      "mean_pd": 0.17243973575455268,
+      "calibration_gap": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.17243973575455268,
+      "ks": 0.0,
+      "brier": 0.1427042732874527,
+      "log_loss": 0.4597337116656922,
+      "accuracy_at_threshold": 0.8275602642454474,
+      "default_recall_at_threshold": 0.0,
+      "threshold": 0.5
+    },
+    "validation": {
+      "rows": 162745,
+      "defaults": 33120,
+      "default_rate": 0.20350855633045561,
+      "mean_pd": 0.17243973575455263,
+      "calibration_gap": -0.03106882057590299,
+      "roc_auc": 0.5,
+      "pr_auc": 0.20350855633045561,
+      "ks": 0.0,
+      "brier": 0.16305809544272704,
+      "log_loss": 0.5084631097385313,
+      "accuracy_at_threshold": 0.7964914436695444,
+      "default_recall_at_threshold": 0.0,
+      "threshold": 0.5
+    }
+  }
+}
