@@ -1,0 +1,9 @@
+feature,value,shap_log_odds,direction
+term_months,60.0,0.641558472250711,raises risk
+acc_open_past_24mths,12.0,0.33947977054271916,raises risk
+fico_range_low,660.0,0.2539584192982045,raises risk
+emp_title,0.23291218850966955,0.20927180501626721,raises risk
+inq_last_6mths,4.0,0.16617072635245753,raises risk
+mths_since_recent_bc,1.0,0.14497559339163724,raises risk
+percent_bc_gt_75,11.1,-0.1340451438149162,lowers risk
+mths_since_recent_inq,0.0,0.09064853052530066,raises risk

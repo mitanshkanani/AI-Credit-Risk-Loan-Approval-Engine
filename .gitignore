@@ -23,3 +23,8 @@ venv/
 
 # Preprocessing V2 outputs (datasets; small JSON/CSV/MD reports in artifacts_v2 stay tracked)
 final_preprocessed_data_v2/
+
+# LightGBM / XGBoost model files (large; kept locally and in Kaggle outputs)
+models/**/results/*.txt
+models/**/results/*.json.model
+models/**/results/*.ubj
