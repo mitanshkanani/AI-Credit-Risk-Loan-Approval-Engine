@@ -1,0 +1,49 @@
+NOTES FOR ANY AI AGENT / CONTRIBUTOR WORKING IN THIS REPO
+==========================================================
+
+STATUS: Accepted-loan Preprocessing V2 is DONE. Do NOT re-run it.
+-----------------------------------------------------------------
+- Run on 2026-10-05 by Claude (Claude Code, Opus 5.5) with:
+      python run_preprocessing_v2.py
+- Result: PREPROCESSING V2: COMPLETE - 72 audits, 0 FAIL, 0 WARN,
+  fresh-session inference test PASSED.
+- accepted_preprocessing_v2.ipynb calls the SAME stage functions
+  (src/preprocessing_v2/run.py). It was intentionally NOT executed,
+  so its cells have no saved outputs. That is expected, not a problem.
+  Do not run it "to fill in the outputs": it would only rewrite
+  identical files (and needs ~3-4 GB free RAM on this 16 GB machine).
+
+Where the results are
+---------------------
+- Datasets (NOT in git, regenerate only if missing):
+      final_preprocessed_data_v2/X_<split>.parquet   190 features
+      final_preprocessed_data_v2/y_<split>.parquet   id, issue_d, target
+  splits: train (2012-08..2014-12, 388,124 rows), validation (2015 H1,
+  162,745), test (2015 H2, 212,801), stress_2016_2018 (518,744, optional
+  stress test only - biased labels).
+- Fitted pipeline (NOT in git): artifacts_v2/preprocessor_v2.joblib
+- In git: artifacts_v2/metadata_v2.json, audit_report_v2.json,
+  preprocessing_v2_report.md, feature/removed/engineered feature lists,
+  single_feature_auc_v2.csv, fresh_session_test_v2.json
+- Explanation: docs/preprocessing_architecture.svg (read top to bottom)
+- Model plan:  docs/model_strategy.pdf
+
+Only re-run preprocessing if
+----------------------------
+- final_preprocessed_data_v2/ or artifacts_v2/preprocessor_v2.joblib is
+  missing (e.g. fresh clone), OR
+- the user explicitly asks for a preprocessing change.
+In that case run `python run_preprocessing_v2.py` from the repo root and
+check it ends with "PREPROCESSING V2: COMPLETE".
+
+Do not modify (V1 backups)
+--------------------------
+final_preprocessed_data/, processed_data/, step13_artifacts/
+
+Next step
+---------
+Model training has NOT started. Follow docs/model_strategy.pdf:
+M0 dummy -> M1 Logistic Regression -> M2 Random Forest -> M3 LightGBM ->
+M4 XGBoost, each as version A (all features) and B (without grade,
+sub_grade, int_rate, installment). Tune on validation, use test once.
+Wait for the user's go-ahead before training.
