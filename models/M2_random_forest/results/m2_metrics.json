@@ -1,0 +1,129 @@
+{
+  "model": "M2",
+  "name": "Random Forest",
+  "estimator": "sklearn.ensemble.RandomForestClassifier",
+  "fixed_parameters": {
+    "max_samples": 0.5,
+    "bootstrap": true,
+    "criterion": "gini",
+    "random_state": 42,
+    "n_estimators_tuning": 200,
+    "n_estimators_final": 500
+  },
+  "search_space": {
+    "min_samples_leaf": [
+      20,
+      50,
+      100
+    ],
+    "max_features": [
+      "sqrt",
+      0.3
+    ],
+    "class_weight": "balanced_subsample checked on the best setting"
+  },
+  "selection_rule": "max validation ROC-AUC; within 0.0005 prefer class_weight=None, larger min_samples_leaf, then sqrt",
+  "chosen": {
+    "A": {
+      "min_samples_leaf": 50,
+      "max_features": 0.3,
+      "class_weight": null
+    },
+    "B": {
+      "min_samples_leaf": 20,
+      "max_features": "sqrt",
+      "class_weight": null
+    }
+  },
+  "model_info": {
+    "A": {
+      "fit_seconds": 506.8,
+      "avg_nodes_per_tree": 4445,
+      "avg_depth": 27.718
+    },
+    "B": {
+      "fit_seconds": 152.2,
+      "avg_nodes_per_tree": 10592,
+      "avg_depth": 31.366
+    }
+  },
+  "n_features": {
+    "A": 189,
+    "B": 147
+  },
+  "environment": {
+    "python": "3.13.15",
+    "pandas": "2.3.3",
+    "scikit_learn": "1.6.1",
+    "platform": "Kaggle CPU notebook",
+    "cpu_cores": 4
+  },
+  "model_files_saved": false,
+  "metrics": {
+    "A": {
+      "train": {
+        "rows": 388124,
+        "defaults": 66928,
+        "default_rate": 0.17243973575455268,
+        "mean_pd": 0.17279205342914966,
+        "calibration_gap": 0.00035231767459698027,
+        "roc_auc": 0.7902288377974881,
+        "pr_auc": 0.44441423278758285,
+        "ks": 0.43201044389089205,
+        "brier": 0.12145334992398847,
+        "log_loss": 0.38758424159424293,
+        "accuracy_at_threshold": 0.8308014964289763,
+        "default_recall_at_threshold": 0.023159215873774803,
+        "threshold": 0.5
+      },
+      "validation": {
+        "rows": 162745,
+        "defaults": 33120,
+        "default_rate": 0.20350855633045561,
+        "mean_pd": 0.1748816063345108,
+        "calibration_gap": -0.02862694999594481,
+        "roc_auc": 0.7344621306351004,
+        "pr_auc": 0.4152043661213156,
+        "ks": 0.3410197650692494,
+        "brier": 0.14434597211605002,
+        "log_loss": 0.45025050200429784,
+        "accuracy_at_threshold": 0.7993302405603859,
+        "default_recall_at_threshold": 0.026509661835748793,
+        "threshold": 0.5
+      }
+    },
+    "B": {
+      "train": {
+        "rows": 388124,
+        "defaults": 66928,
+        "default_rate": 0.17243973575455268,
+        "mean_pd": 0.17304048610188,
+        "calibration_gap": 0.0006007503473273168,
+        "roc_auc": 0.8547733648925165,
+        "pr_auc": 0.5555499980863204,
+        "ks": 0.5517156626272586,
+        "brier": 0.11731703375407367,
+        "log_loss": 0.376693647931433,
+        "accuracy_at_threshold": 0.8282765301810762,
+        "default_recall_at_threshold": 0.004243366005259383,
+        "threshold": 0.5
+      },
+      "validation": {
+        "rows": 162745,
+        "defaults": 33120,
+        "default_rate": 0.20350855633045561,
+        "mean_pd": 0.1817250282605964,
+        "calibration_gap": -0.021783528069859226,
+        "roc_auc": 0.7270083644291643,
+        "pr_auc": 0.4084089038068506,
+        "ks": 0.3284408806525699,
+        "brier": 0.14672137943566885,
+        "log_loss": 0.4571387495655484,
+        "accuracy_at_threshold": 0.7969154198285662,
+        "default_recall_at_threshold": 0.0028079710144927536,
+        "threshold": 0.5
+      }
+    }
+  },
+  "test_split": "sealed"
+}

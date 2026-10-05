@@ -77,6 +77,16 @@ Modeling progress (models/)
 - M1 logistic regression: DONE (2026-10-05). Validation ROC-AUC A 0.7335 /
   B 0.7252 (B = deployable, no LendingClub grade features), Brier B 0.1449.
   log1p on 26 skewed columns + StandardScaler, fico_range_high dropped.
+- M2 random forest: DONE (2026-10-05) ON KAGGLE (local run hit the laptop's
+  memory limit). Validation ROC-AUC A 0.7345 / B 0.7270, Brier B 0.1467:
+  no clear gain over M1 (+0.0018 AUC, worse Brier). Kaggle workflow:
+  private dataset mitanshkanani/credit-risk-m2-inputs (train+validation
+  only, NO test), private script kernel mitanshkanani/credit-risk-m2-random-forest
+  (models/M2_random_forest/kaggle/runner.py executes the notebook with
+  nbconvert); results pulled with `kaggle kernels output`. Forest .joblib
+  files were not saved on Kaggle; validation predictions are in
+  results/m2_validation_pd.parquet (gitignored, like all *.parquet).
+  Heavy models (M3/M4) can reuse this Kaggle pattern.
 - The TEST split is sealed: load_split("test") raises unless allow_test=True.
   Only open it for the final chosen model.
 - The user reviews each model before the next one starts. Do NOT start

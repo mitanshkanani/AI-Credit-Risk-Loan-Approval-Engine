@@ -1,0 +1,15 @@
+{
+  "id": "mitanshkanani/credit-risk-m2-random-forest",
+  "title": "credit-risk-m2-random-forest",
+  "code_file": "runner.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "false",
+  "enable_tpu": "false",
+  "enable_internet": "false",
+  "dataset_sources": ["mitanshkanani/credit-risk-m2-inputs"],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}
