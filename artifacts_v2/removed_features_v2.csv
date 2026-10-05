@@ -1,0 +1,104 @@
+stage,column,reason
+V1 Step 7 (carried over),loan_status,Target / outcome information
+V1 Step 7 (carried over),target,Target / outcome information
+V1 Step 7 (carried over),id,"Identifier, not a predictive feature"
+V1 Step 7 (carried over),member_id,"Identifier, not a predictive feature"
+V1 Step 7 (carried over),url,Administrative LendingClub listing URL
+V1 Step 7 (carried over),policy_code,Constant / non-informative field
+V1 Step 7 (carried over),initial_list_status,"Platform listing/origination attribute, not an underwriting feature"
+V1 Step 7 (carried over),funded_amnt,Post-prediction / post-origination information
+V1 Step 7 (carried over),funded_amnt_inv,Post-prediction / post-origination information
+V1 Step 7 (carried over),issue_d,Post-prediction / post-origination information
+V1 Step 7 (carried over),pymnt_plan,Post-prediction / post-origination information
+V1 Step 7 (carried over),out_prncp,Post-prediction / post-origination information
+V1 Step 7 (carried over),out_prncp_inv,Post-prediction / post-origination information
+V1 Step 7 (carried over),total_pymnt,Post-prediction / post-origination information
+V1 Step 7 (carried over),total_pymnt_inv,Post-prediction / post-origination information
+V1 Step 7 (carried over),total_rec_prncp,Post-prediction / post-origination information
+V1 Step 7 (carried over),total_rec_int,Post-prediction / post-origination information
+V1 Step 7 (carried over),total_rec_late_fee,Post-prediction / post-origination information
+V1 Step 7 (carried over),recoveries,Post-prediction / post-origination information
+V1 Step 7 (carried over),collection_recovery_fee,Post-prediction / post-origination information
+V1 Step 7 (carried over),last_pymnt_d,Post-prediction / post-origination information
+V1 Step 7 (carried over),last_pymnt_amnt,Post-prediction / post-origination information
+V1 Step 7 (carried over),next_pymnt_d,Post-prediction / post-origination information
+V1 Step 7 (carried over),last_credit_pull_d,Post-prediction / post-origination information
+V1 Step 7 (carried over),last_fico_range_high,Post-prediction / post-origination information
+V1 Step 7 (carried over),last_fico_range_low,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_flag,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_type,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_reason,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_status,Post-prediction / post-origination information
+V1 Step 7 (carried over),deferral_term,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_amount,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_start_date,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_end_date,Post-prediction / post-origination information
+V1 Step 7 (carried over),payment_plan_start_date,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_length,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_dpd,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_loan_status,Post-prediction / post-origination information
+V1 Step 7 (carried over),orig_projected_additional_accrued_interest,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_payoff_balance_amount,Post-prediction / post-origination information
+V1 Step 7 (carried over),hardship_last_payment_amount,Post-prediction / post-origination information
+V1 Step 7 (carried over),disbursement_method,Post-prediction / post-origination information
+V1 Step 7 (carried over),debt_settlement_flag,Post-prediction / post-origination information
+V1 Step 7 (carried over),debt_settlement_flag_date,Post-prediction / post-origination information
+V1 Step 7 (carried over),settlement_status,Post-prediction / post-origination information
+V1 Step 7 (carried over),settlement_date,Post-prediction / post-origination information
+V1 Step 7 (carried over),settlement_amount,Post-prediction / post-origination information
+V1 Step 7 (carried over),settlement_percentage,Post-prediction / post-origination information
+V1 Step 7 (carried over),settlement_term,Post-prediction / post-origination information
+V2 by design,desc,Free-text loan description; Step 9 marked it DROP_INITIAL_VERSION (needs a separate NLP pipeline).
+V2 replaced by engineered feature,earliest_cr_line,Replaced by `credit_history_months`
+V2 replaced by engineered feature,sec_app_earliest_cr_line,Replaced by `sec_app_credit_history_months`
+V2 replaced by engineered feature,term,Replaced by `term_months`
+V2 replaced by engineered feature,emp_length,Replaced by `emp_length_years`
+V2 key column,issue_d,Restored only for the temporal split and credit_history_months; never a model feature
+V2 train-only filter,application_type,Constant (single value) in training rows
+V2 train-only filter,annual_inc_joint,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,dti_joint,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,verification_status_joint,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,open_acc_6m,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,open_act_il,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,open_il_12m,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,open_il_24m,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,mths_since_rcnt_il,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,total_bal_il,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,il_util,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,open_rv_12m,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,open_rv_24m,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,max_bal_bc,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,all_util,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,inq_fi,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,total_cu_tl,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,inq_last_12m,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,revol_bal_joint,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_fico_range_low,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_fico_range_high,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_inq_last_6mths,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_mort_acc,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_open_acc,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_revol_util,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_open_act_il,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_num_rev_accts,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_chargeoff_within_12_mths,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_collections_12_mths_ex_med,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_mths_since_last_major_derog,Missing in 100.0% of training rows (> 95%)
+V2 train-only filter,sec_app_credit_history_months,Missing in 100.0% of training rows (> 95%)
+V2 duplicate content (train),missingindicator_tot_cur_bal,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_total_rev_hi_lim,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_mo_sin_rcnt_rev_tl_op,Identical to `missingindicator_mo_sin_old_rev_tl_op` in training rows
+V2 duplicate content (train),missingindicator_mo_sin_rcnt_tl,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_accts_ever_120_pd,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_actv_bc_tl,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_actv_rev_tl,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_bc_tl,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_il_tl,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_op_rev_tl,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_rev_accts,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_rev_tl_bal_gt_0,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_tl_30dpd,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_tl_90g_dpd_24m,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_num_tl_op_past_12m,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_tot_hi_cred_lim,Identical to `missingindicator_tot_coll_amt` in training rows
+V2 duplicate content (train),missingindicator_total_il_high_credit_limit,Identical to `missingindicator_tot_coll_amt` in training rows

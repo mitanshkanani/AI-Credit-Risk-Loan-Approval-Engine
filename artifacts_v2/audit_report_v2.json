@@ -1,0 +1,439 @@
+{
+  "complete": true,
+  "failures": [],
+  "warnings": [],
+  "results": [
+    {
+      "category": "Target alignment",
+      "check": "raw eligible row count == Step 10 row count",
+      "status": "PASS",
+      "detail": "1348099 == 1348099"
+    },
+    {
+      "category": "Target alignment",
+      "check": "12 shared columns identical row-by-row (raw vs Step 10)",
+      "status": "PASS",
+      "detail": "{'loan_amnt': 0, 'int_rate': 0, 'annual_inc': 0, 'dti': 0, 'revol_util': 0, 'fico_range_low': 0, 'term': 0, 'grade': 0, 'emp_title': 0, 'title': 0, 'zip_code': 0, 'earliest_cr_line': 0}"
+    },
+    {
+      "category": "Feature engineering",
+      "check": "credit_history_months has no negative values (TRAIN)",
+      "status": "PASS",
+      "detail": "{'missing': 0, 'negative': 0, 'min': 36.0, 'median': 177.0, 'max': 842.0}"
+    },
+    {
+      "category": "Feature engineering",
+      "check": "term parsed to {36, 60} months",
+      "status": "PASS",
+      "detail": "[36.0, 60.0]"
+    },
+    {
+      "category": "Feature engineering",
+      "check": "every non-missing emp_length mapped to years",
+      "status": "PASS",
+      "detail": "unmapped = 0"
+    },
+    {
+      "category": "Leakage (train-only fitting)",
+      "check": "column filter decisions reproduce from TRAIN",
+      "status": "PASS",
+      "detail": "31 columns dropped"
+    },
+    {
+      "category": "Leakage (train-only fitting)",
+      "check": "every filtered column handled by a transformer (no silent remainder)",
+      "status": "PASS",
+      "detail": "71 consumed / 71 available"
+    },
+    {
+      "category": "Leakage (train-only fitting)",
+      "check": "numeric medians equal TRAIN medians",
+      "status": "PASS",
+      "detail": "62 numeric columns"
+    },
+    {
+      "category": "Leakage (train-only fitting)",
+      "check": "one-hot categories are a subset of TRAIN values",
+      "status": "PASS",
+      "detail": "non-train categories = {}"
+    },
+    {
+      "category": "Leakage (train-only fitting)",
+      "check": "target-encoder prior equals TRAIN default rate",
+      "status": "PASS",
+      "detail": "prior 0.172440 vs train 0.172440"
+    },
+    {
+      "category": "Leakage (train-only fitting)",
+      "check": "target-encoder categories are a subset of TRAIN values",
+      "status": "PASS",
+      "detail": "non-train categories = {}"
+    },
+    {
+      "category": "Leakage (target encoding)",
+      "check": "TRAIN encodings are out-of-fold (cross-fitted), not self-encoded",
+      "status": "PASS",
+      "detail": "share of train rows whose OOF encoding differs from full-fit encoding = {'zip_code': 0.9999, 'emp_title': 0.9088, 'title': 0.9777}"
+    },
+    {
+      "category": "Duplicate columns",
+      "check": "[train] no two features have identical values",
+      "status": "PASS",
+      "detail": "duplicate pairs = []"
+    },
+    {
+      "category": "Leakage (single-feature AUC review)",
+      "check": "no single feature has TRAIN AUC > 0.8 (review flag, not a failure)",
+      "status": "PASS",
+      "detail": "flagged = []; top-5 = [['int_rate', 0.6741], ['term_months', 0.6053], ['fico_range_high', 0.5836], ['fico_range_low', 0.5836], ['dti', 0.5707]]"
+    },
+    {
+      "category": "Leakage (feature names)",
+      "check": "no target / id / date / post-origination column among features",
+      "status": "PASS",
+      "detail": "offending features = []"
+    },
+    {
+      "category": "Missing values",
+      "check": "[train] no NaN in features",
+      "status": "PASS",
+      "detail": "NaN count = 0"
+    },
+    {
+      "category": "Infinite values",
+      "check": "[train] no +/-inf in features",
+      "status": "PASS",
+      "detail": "inf count = 0"
+    },
+    {
+      "category": "Non-numeric features",
+      "check": "[train] every feature is numeric",
+      "status": "PASS",
+      "detail": "non-numeric = []"
+    },
+    {
+      "category": "Duplicate columns",
+      "check": "[train] no duplicate column names",
+      "status": "PASS",
+      "detail": "duplicates = []"
+    },
+    {
+      "category": "Feature alignment",
+      "check": "[train] columns identical (names + order) to fitted feature list",
+      "status": "PASS",
+      "detail": "[190] columns"
+    },
+    {
+      "category": "Feature count",
+      "check": "[train] feature count matches fitted pipeline",
+      "status": "PASS",
+      "detail": "[190] vs 190"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[train] X rows == y rows",
+      "status": "PASS",
+      "detail": "X 388124 / y 388124"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[train] target has no NaN and only {0, 1}",
+      "status": "PASS",
+      "detail": "values = [0, 1]"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[train] ids unique within split",
+      "status": "PASS",
+      "detail": "388124 unique ids"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[train] exported X and y files have equal rows and y matches memory",
+      "status": "PASS",
+      "detail": "X file rows 388124, y file rows 388124"
+    },
+    {
+      "category": "Missing values",
+      "check": "[validation] no NaN in features",
+      "status": "PASS",
+      "detail": "NaN count = 0"
+    },
+    {
+      "category": "Infinite values",
+      "check": "[validation] no +/-inf in features",
+      "status": "PASS",
+      "detail": "inf count = 0"
+    },
+    {
+      "category": "Non-numeric features",
+      "check": "[validation] every feature is numeric",
+      "status": "PASS",
+      "detail": "non-numeric = []"
+    },
+    {
+      "category": "Duplicate columns",
+      "check": "[validation] no duplicate column names",
+      "status": "PASS",
+      "detail": "duplicates = []"
+    },
+    {
+      "category": "Feature alignment",
+      "check": "[validation] columns identical (names + order) to fitted feature list",
+      "status": "PASS",
+      "detail": "[190] columns"
+    },
+    {
+      "category": "Feature count",
+      "check": "[validation] feature count matches fitted pipeline",
+      "status": "PASS",
+      "detail": "[190] vs 190"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[validation] X rows == y rows",
+      "status": "PASS",
+      "detail": "X 162745 / y 162745"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[validation] target has no NaN and only {0, 1}",
+      "status": "PASS",
+      "detail": "values = [0, 1]"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[validation] ids unique within split",
+      "status": "PASS",
+      "detail": "162745 unique ids"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[validation] exported X and y files have equal rows and y matches memory",
+      "status": "PASS",
+      "detail": "X file rows 162745, y file rows 162745"
+    },
+    {
+      "category": "Missing values",
+      "check": "[test] no NaN in features",
+      "status": "PASS",
+      "detail": "NaN count = 0"
+    },
+    {
+      "category": "Infinite values",
+      "check": "[test] no +/-inf in features",
+      "status": "PASS",
+      "detail": "inf count = 0"
+    },
+    {
+      "category": "Non-numeric features",
+      "check": "[test] every feature is numeric",
+      "status": "PASS",
+      "detail": "non-numeric = []"
+    },
+    {
+      "category": "Duplicate columns",
+      "check": "[test] no duplicate column names",
+      "status": "PASS",
+      "detail": "duplicates = []"
+    },
+    {
+      "category": "Feature alignment",
+      "check": "[test] columns identical (names + order) to fitted feature list",
+      "status": "PASS",
+      "detail": "[190] columns"
+    },
+    {
+      "category": "Feature count",
+      "check": "[test] feature count matches fitted pipeline",
+      "status": "PASS",
+      "detail": "[190] vs 190"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[test] X rows == y rows",
+      "status": "PASS",
+      "detail": "X 212801 / y 212801"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[test] target has no NaN and only {0, 1}",
+      "status": "PASS",
+      "detail": "values = [0, 1]"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[test] ids unique within split",
+      "status": "PASS",
+      "detail": "212801 unique ids"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[test] exported X and y files have equal rows and y matches memory",
+      "status": "PASS",
+      "detail": "X file rows 212801, y file rows 212801"
+    },
+    {
+      "category": "Missing values",
+      "check": "[stress_2016_2018] no NaN in features",
+      "status": "PASS",
+      "detail": "NaN count = 0"
+    },
+    {
+      "category": "Infinite values",
+      "check": "[stress_2016_2018] no +/-inf in features",
+      "status": "PASS",
+      "detail": "inf count = 0"
+    },
+    {
+      "category": "Non-numeric features",
+      "check": "[stress_2016_2018] every feature is numeric",
+      "status": "PASS",
+      "detail": "non-numeric = []"
+    },
+    {
+      "category": "Duplicate columns",
+      "check": "[stress_2016_2018] no duplicate column names",
+      "status": "PASS",
+      "detail": "duplicates = []"
+    },
+    {
+      "category": "Feature alignment",
+      "check": "[stress_2016_2018] columns identical (names + order) to fitted feature list",
+      "status": "PASS",
+      "detail": "[190] columns"
+    },
+    {
+      "category": "Feature count",
+      "check": "[stress_2016_2018] feature count matches fitted pipeline",
+      "status": "PASS",
+      "detail": "[190] vs 190"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[stress_2016_2018] X rows == y rows",
+      "status": "PASS",
+      "detail": "X 518744 / y 518744"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[stress_2016_2018] target has no NaN and only {0, 1}",
+      "status": "PASS",
+      "detail": "values = [0, 1]"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[stress_2016_2018] ids unique within split",
+      "status": "PASS",
+      "detail": "518744 unique ids"
+    },
+    {
+      "category": "Target alignment",
+      "check": "[stress_2016_2018] exported X and y files have equal rows and y matches memory",
+      "status": "PASS",
+      "detail": "X file rows 518744, y file rows 518744"
+    },
+    {
+      "category": "Fitted-transformer persistence",
+      "check": "reloaded preprocessor output identical to in-memory output",
+      "status": "PASS",
+      "detail": "2,000 validation rows"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "[train] every issue month inside 2012-08-01 .. 2015-01-01 (exclusive)",
+      "status": "PASS",
+      "detail": "2012-08 .. 2014-12"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "[validation] every issue month inside 2015-01-01 .. 2015-07-01 (exclusive)",
+      "status": "PASS",
+      "detail": "2015-01 .. 2015-06"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "[test] every issue month inside 2015-07-01 .. 2016-01-01 (exclusive)",
+      "status": "PASS",
+      "detail": "2015-07 .. 2015-12"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "[stress_2016_2018] every issue month inside 2016-01-01 .. 2019-01-01 (exclusive)",
+      "status": "PASS",
+      "detail": "2016-01 .. 2018-12"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "latest train month < earliest validation month",
+      "status": "PASS",
+      "detail": "2014-12 < 2015-01"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "latest validation month < earliest test month",
+      "status": "PASS",
+      "detail": "2015-06 < 2015-07"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "latest test month < earliest stress_2016_2018 month",
+      "status": "PASS",
+      "detail": "2015-12 < 2016-01"
+    },
+    {
+      "category": "Temporal ordering",
+      "check": "no loan id appears in more than one split",
+      "status": "PASS",
+      "detail": "1282414 ids, 0 repeated"
+    },
+    {
+      "category": "Target alignment",
+      "check": "1000 random ids: target matches raw loan_status",
+      "status": "PASS",
+      "detail": "match rate = 1.0000"
+    },
+    {
+      "category": "Target alignment",
+      "check": "1000 random ids: issue_d matches raw",
+      "status": "PASS",
+      "detail": "match rate = 1.0000"
+    },
+    {
+      "category": "Fitted-transformer persistence",
+      "check": "preprocessor_v2.joblib and metadata_v2.json exist",
+      "status": "PASS",
+      "detail": "missing = []"
+    },
+    {
+      "category": "Feature count",
+      "check": "every exported X file has the metadata feature count and order",
+      "status": "PASS",
+      "detail": "{'train': 190, 'validation': 190, 'test': 190, 'stress_2016_2018': 190} vs metadata 190"
+    },
+    {
+      "category": "Modeling readiness",
+      "check": "LC risk features (grade, sub_grade, int_rate, installment) available for A/B",
+      "status": "PASS",
+      "detail": "42 columns"
+    },
+    {
+      "category": "Fresh-session loading",
+      "check": "separate Python process loads preprocessor and transforms raw rows + new application",
+      "status": "PASS",
+      "detail": "exit code 0"
+    },
+    {
+      "category": "Backups untouched",
+      "check": "temporary staging folder removed",
+      "status": "PASS",
+      "detail": "final_preprocessed_data_v2\\_staging"
+    },
+    {
+      "category": "Backups untouched",
+      "check": "final_preprocessed_data/, processed_data/, step13_artifacts/ unchanged",
+      "status": "PASS",
+      "detail": "8 files checked"
+    }
+  ]
+}

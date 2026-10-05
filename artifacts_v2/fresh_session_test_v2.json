@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "preprocessor loads in a fresh process",
+      "status": "PASS",
+      "detail": "C:\\Users\\mitansh\\Desktop\\ML PROJECTS\\AI-Credit-Risk-Loan-Approval-Engine\\artifacts_v2\\preprocessor_v2.joblib"
+    },
+    {
+      "check": "raw CSV rows for 5 test ids reproduce exported X_test rows exactly",
+      "status": "PASS",
+      "detail": "ids = ['66494948', '62205382', '61963243', '59170357', '57274614']; max |diff| = 0.000e+00; columns match = True"
+    },
+    {
+      "check": "new application -> 1 row with the full feature set",
+      "status": "PASS",
+      "detail": "shape = (1, 190)"
+    },
+    {
+      "check": "new application -> no NaN / inf",
+      "status": "PASS",
+      "detail": "NaN = 0, inf = 0"
+    },
+    {
+      "check": "unseen zip_code falls back to the TRAIN prior default rate",
+      "status": "PASS",
+      "detail": "'000xx' absent from 874 train zips = True; encoded 0.172440 vs train prior 0.172440"
+    },
+    {
+      "check": "missing emp_title uses the TRAIN-learned __MISSING__ encoding",
+      "status": "PASS",
+      "detail": "encoded 0.213949 vs expected 0.213949"
+    },
+    {
+      "check": "missing dti is imputed with the TRAIN median",
+      "status": "PASS",
+      "detail": "dti 17.26 vs train median 17.26; missing flag = None"
+    },
+    {
+      "check": "credit_history_months computed from application month",
+      "status": "PASS",
+      "detail": "Mar-2010 -> Oct-2026 = 199.0 months"
+    }
+  ]
+}

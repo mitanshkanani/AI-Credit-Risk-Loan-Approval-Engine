@@ -1,0 +1,32 @@
+type,feature,definition,status
+Row-level engineering,credit_history_months,"(issue_year - ecl_year) * 12 + (issue_month - ecl_month), from earliest_cr_line",in final features
+Row-level engineering,sec_app_credit_history_months,Same formula from sec_app_earliest_cr_line,dropped: Missing in 100.0% of training rows (> 95%)
+Row-level engineering,term_months,Numeric months parsed from `term` (36 / 60),in final features
+Row-level engineering,emp_length_years,`< 1 year` -> 0 ... `10+ years` -> 10,in final features
+Missing-value indicator,missingindicator_mths_since_last_delinq,1 if `mths_since_last_delinq` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mths_since_last_record,1 if `mths_since_last_record` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_revol_util,1 if `revol_util` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mths_since_last_major_derog,1 if `mths_since_last_major_derog` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_tot_coll_amt,1 if `tot_coll_amt` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_avg_cur_bal,1 if `avg_cur_bal` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_bc_open_to_buy,1 if `bc_open_to_buy` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_bc_util,1 if `bc_util` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mo_sin_old_il_acct,1 if `mo_sin_old_il_acct` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mo_sin_old_rev_tl_op,1 if `mo_sin_old_rev_tl_op` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mths_since_recent_bc,1 if `mths_since_recent_bc` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mths_since_recent_bc_dlq,1 if `mths_since_recent_bc_dlq` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mths_since_recent_inq,1 if `mths_since_recent_inq` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_mths_since_recent_revol_delinq,1 if `mths_since_recent_revol_delinq` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_num_tl_120dpd_2m,1 if `num_tl_120dpd_2m` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_pct_tl_nvr_dlq,1 if `pct_tl_nvr_dlq` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_percent_bc_gt_75,1 if `percent_bc_gt_75` was missing (median-imputed),in final features
+Missing-value indicator,missingindicator_emp_length_years,1 if `emp_length_years` was missing (median-imputed),in final features
+One-hot encoding,grade_*,7 columns (rare train categories -> infrequent),in final features
+One-hot encoding,sub_grade_*,33 columns (rare train categories -> infrequent),in final features
+One-hot encoding,home_ownership_*,4 columns (rare train categories -> infrequent),in final features
+One-hot encoding,verification_status_*,3 columns (rare train categories -> infrequent),in final features
+One-hot encoding,purpose_*,13 columns (rare train categories -> infrequent),in final features
+One-hot encoding,addr_state_*,47 columns (rare train categories -> infrequent),in final features
+Target encoding (cross-fitted),zip_code,Smoothed training default rate of the category; out-of-fold for train rows,in final features
+Target encoding (cross-fitted),emp_title,Smoothed training default rate of the category; out-of-fold for train rows,in final features
+Target encoding (cross-fitted),title,Smoothed training default rate of the category; out-of-fold for train rows,in final features

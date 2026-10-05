@@ -24,3 +24,6 @@ __pycache__/
 .venv/
 venv/
 .env
+
+# Preprocessing V2 outputs (datasets; small JSON/CSV/MD reports in artifacts_v2 stay tracked)
+final_preprocessed_data_v2/
