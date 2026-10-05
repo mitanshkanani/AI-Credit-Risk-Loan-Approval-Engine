@@ -1,0 +1,153 @@
+column,timing_class,reason
+id,identifier,Identifier; does not represent borrower risk information.
+member_id,identifier,Identifier; does not represent borrower risk information.
+loan_amnt,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+funded_amnt,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+funded_amnt_inv,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+term,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+int_rate,LC-derived / potential leakage risk,LendingClub-derived loan risk/terms associated with its underwriting/pricing process; flagged for potential leakage relative to an independent pre-underwriting model.
+installment,LC-derived / potential leakage risk,LendingClub-derived loan risk/terms associated with its underwriting/pricing process; flagged for potential leakage relative to an independent pre-underwriting model.
+grade,LC-derived / potential leakage risk,LendingClub-derived loan risk/terms associated with its underwriting/pricing process; flagged for potential leakage relative to an independent pre-underwriting model.
+sub_grade,LC-derived / potential leakage risk,LendingClub-derived loan risk/terms associated with its underwriting/pricing process; flagged for potential leakage relative to an independent pre-underwriting model.
+emp_title,text / high-cardinality,Available at application but requires specialized text/high-cardinality representation.
+emp_length,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+home_ownership,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+annual_inc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+verification_status,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+issue_d,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+loan_status,target,Defines the supervised learning target/outcome.
+pymnt_plan,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+url,administrative / constant / non-feature,Administrative LendingClub listing URL; not a borrower risk feature.
+desc,text / high-cardinality,Available at application but requires specialized text/high-cardinality representation.
+purpose,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+title,text / high-cardinality,Available at application but requires specialized text/high-cardinality representation.
+zip_code,text / high-cardinality,Available at application but requires specialized text/high-cardinality representation.
+addr_state,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+dti,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+delinq_2yrs,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+earliest_cr_line,application-time date / historical date,Historical credit date available at application; requires date-derived representation.
+fico_range_low,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+fico_range_high,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+inq_last_6mths,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_last_delinq,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_last_record,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+open_acc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+pub_rec,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+revol_bal,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+revol_util,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+total_acc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+initial_list_status,administrative / constant / non-feature,Platform listing/origination attribute; not an underwriting borrower feature.
+out_prncp,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+out_prncp_inv,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+total_pymnt,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+total_pymnt_inv,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+total_rec_prncp,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+total_rec_int,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+total_rec_late_fee,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+recoveries,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+collection_recovery_fee,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+last_pymnt_d,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+last_pymnt_amnt,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+next_pymnt_d,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+last_credit_pull_d,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+last_fico_range_high,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+last_fico_range_low,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+collections_12_mths_ex_med,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_last_major_derog,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+policy_code,administrative / constant / non-feature,Constant/single-value field; no predictive variance.
+application_type,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+annual_inc_joint,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+dti_joint,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+verification_status_joint,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+acc_now_delinq,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+tot_coll_amt,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+tot_cur_bal,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+open_acc_6m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+open_act_il,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+open_il_12m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+open_il_24m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_rcnt_il,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+total_bal_il,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+il_util,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+open_rv_12m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+open_rv_24m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+max_bal_bc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+all_util,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+total_rev_hi_lim,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+inq_fi,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+total_cu_tl,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+inq_last_12m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+acc_open_past_24mths,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+avg_cur_bal,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+bc_open_to_buy,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+bc_util,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+chargeoff_within_12_mths,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+delinq_amnt,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mo_sin_old_il_acct,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mo_sin_old_rev_tl_op,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mo_sin_rcnt_rev_tl_op,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mo_sin_rcnt_tl,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mort_acc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_recent_bc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_recent_bc_dlq,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_recent_inq,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+mths_since_recent_revol_delinq,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_accts_ever_120_pd,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_actv_bc_tl,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_actv_rev_tl,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_bc_sats,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_bc_tl,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_il_tl,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_op_rev_tl,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_rev_accts,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_rev_tl_bal_gt_0,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_sats,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_tl_120dpd_2m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_tl_30dpd,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_tl_90g_dpd_24m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+num_tl_op_past_12m,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+pct_tl_nvr_dlq,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+percent_bc_gt_75,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+pub_rec_bankruptcies,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+tax_liens,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+tot_hi_cred_lim,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+total_bal_ex_mort,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+total_bc_limit,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+total_il_high_credit_limit,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+revol_bal_joint,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_fico_range_low,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_fico_range_high,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_earliest_cr_line,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_inq_last_6mths,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_mort_acc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_open_acc,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_revol_util,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_open_act_il,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_num_rev_accts,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_chargeoff_within_12_mths,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_collections_12_mths_ex_med,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+sec_app_mths_since_last_major_derog,application-time feature,Applicant/credit information that can be available at the application/underwriting stage.
+hardship_flag,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_type,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_reason,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_status,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+deferral_term,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_amount,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_start_date,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_end_date,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+payment_plan_start_date,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_length,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_dpd,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_loan_status,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+orig_projected_additional_accrued_interest,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_payoff_balance_amount,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+hardship_last_payment_amount,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+disbursement_method,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+debt_settlement_flag,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+debt_settlement_flag_date,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+settlement_status,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+settlement_date,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+settlement_amount,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+settlement_percentage,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+settlement_term,post-prediction,Recorded at or after origination/servicing and therefore not safely available at the pre-underwriting prediction point.
+target,target,Defines the supervised learning target/outcome.

@@ -1,0 +1,104 @@
+column,raw_dtype,representation_category,planned_transformation,reason
+loan_amnt,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+term,object,CATEGORICAL,ENCODING,Categorical application-time feature
+int_rate,float64,LC_DERIVED_REVIEW,RETAIN_FOR_REVIEW,Interest rate is available in the LendingClub record but is an underwriting-derived variable. Its use requires explicit methodological justification.
+installment,float64,LC_DERIVED_REVIEW,RETAIN_FOR_REVIEW,Installment is associated with loan terms and requires explicit review of its availability at the prediction point.
+grade,object,LC_DERIVED_REVIEW,RETAIN_FOR_REVIEW,LendingClub risk grade is underwriting-derived and requires explicit methodological justification.
+sub_grade,object,LC_DERIVED_REVIEW,RETAIN_FOR_REVIEW,LendingClub sub-grade is underwriting-derived and requires explicit methodological justification.
+emp_title,object,HIGH_CARDINALITY_CATEGORICAL,REVIEW_ENCODER,Applicant employment title has high cardinality and requires controlled representation rather than raw one-hot encoding.
+emp_length,object,CATEGORICAL,ENCODING,Categorical application-time feature
+home_ownership,object,CATEGORICAL,ENCODING,Categorical application-time feature
+annual_inc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+verification_status,object,CATEGORICAL,ENCODING,Categorical application-time feature
+desc,object,FREE_TEXT,DROP_INITIAL_VERSION,Free-form loan description requires a separate NLP pipeline. It will not be included in the initial tabular model.
+purpose,object,LOW_CARDINALITY_CATEGORICAL,ENCODING,Loan purpose is a structured categorical application-time field.
+title,object,HIGH_CARDINALITY_TEXT,DROP_INITIAL_VERSION,Free-form loan title has high cardinality and requires specialized text processing. It will not enter the initial tabular model.
+zip_code,object,CATEGORICAL,ENCODING,Categorical application-time feature
+addr_state,object,CATEGORICAL,ENCODING,Categorical application-time feature
+dti,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+delinq_2yrs,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+earliest_cr_line,object,DATE,DATE_FEATURE_ENGINEERING,Historical/application-time credit date. Convert to meaningful temporal features during transformation.
+fico_range_low,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+fico_range_high,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+inq_last_6mths,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mths_since_last_delinq,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
+mths_since_last_record,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+open_acc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+pub_rec,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+revol_bal,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+revol_util,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+total_acc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+collections_12_mths_ex_med,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mths_since_last_major_derog,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
+application_type,object,CATEGORICAL,ENCODING,Categorical application-time feature
+annual_inc_joint,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+dti_joint,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+verification_status_joint,object,CATEGORICAL,ENCODING,Categorical application-time feature
+acc_now_delinq,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
+tot_coll_amt,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+tot_cur_bal,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+open_acc_6m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+open_act_il,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+open_il_12m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+open_il_24m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mths_since_rcnt_il,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+total_bal_il,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+il_util,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+open_rv_12m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+open_rv_24m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+max_bal_bc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+all_util,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+total_rev_hi_lim,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+inq_fi,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+total_cu_tl,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+inq_last_12m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+acc_open_past_24mths,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+avg_cur_bal,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+bc_open_to_buy,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+bc_util,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+chargeoff_within_12_mths,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+delinq_amnt,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mo_sin_old_il_acct,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mo_sin_old_rev_tl_op,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mo_sin_rcnt_rev_tl_op,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mo_sin_rcnt_tl,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mort_acc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mths_since_recent_bc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mths_since_recent_bc_dlq,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
+mths_since_recent_inq,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+mths_since_recent_revol_delinq,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
+num_accts_ever_120_pd,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_actv_bc_tl,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_actv_rev_tl,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_bc_sats,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_bc_tl,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_il_tl,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_op_rev_tl,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_rev_accts,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_rev_tl_bal_gt_0,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_sats,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_tl_120dpd_2m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_tl_30dpd,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+num_tl_90g_dpd_24m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
+num_tl_op_past_12m,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+pct_tl_nvr_dlq,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
+percent_bc_gt_75,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+pub_rec_bankruptcies,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+tax_liens,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+tot_hi_cred_lim,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+total_bal_ex_mort,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+total_bc_limit,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+total_il_high_credit_limit,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+revol_bal_joint,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_fico_range_low,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_fico_range_high,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_earliest_cr_line,object,DATE,DATE_FEATURE_ENGINEERING,Historical/application-time credit date. Convert to meaningful temporal features during transformation.
+sec_app_inq_last_6mths,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_mort_acc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_open_acc,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_revol_util,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_open_act_il,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_num_rev_accts,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_chargeoff_within_12_mths,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_collections_12_mths_ex_med,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric application-time feature
+sec_app_mths_since_last_major_derog,float64,NUMERIC,NUMERIC_PREPROCESSING,Numeric count/months-since/percentage feature. It is not a calendar date.
