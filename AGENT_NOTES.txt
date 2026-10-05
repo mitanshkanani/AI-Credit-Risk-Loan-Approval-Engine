@@ -74,6 +74,9 @@ Modeling progress (models/)
       jupyter nbconvert --to notebook --execute --inplace <notebook>
   PDFs are built with the default Python 3.14 (has reportlab).
 - M0 dummy baseline: DONE (2026-10-05). Validation ROC-AUC 0.500, Brier 0.1631.
+- M1 logistic regression: DONE (2026-10-05). Validation ROC-AUC A 0.7335 /
+  B 0.7252 (B = deployable, no LendingClub grade features), Brier B 0.1449.
+  log1p on 26 skewed columns + StandardScaler, fico_range_high dropped.
 - The TEST split is sealed: load_split("test") raises unless allow_test=True.
   Only open it for the final chosen model.
 - The user reviews each model before the next one starts. Do NOT start
