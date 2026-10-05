@@ -1,13 +1,37 @@
 NOTES FOR ANY AI AGENT / CONTRIBUTOR WORKING IN THIS REPO
 ==========================================================
 
+REPO LAYOUT
+-----------
+  run_preprocessing_v2.py      entry point for preprocessing V2
+  src/preprocessing_v2/        V2 pipeline code (one module per stage)
+  tests/                       fresh-session inference test
+  notebooks/                   Data_Inspection, accepted_preprocessing (V1), accepted_preprocessing_v2
+  scripts/                     generate_eda_reports.py (Sweetviz EDA)
+  reports/eda/                 Sweetviz HTML reports (accepted, rejected)
+  reports/preprocessing_v1_audits/   V1 Step 5-10 audit CSVs
+  docs/                        preprocessing_architecture.svg, model_strategy.pdf (+ generators)
+  artifacts_v2/                V2 metadata, audits, reports, fitted preprocessor (.joblib not in git)
+  data/                        raw LendingClub CSVs (not in git)
+  data/interim/                accepted_quality_clean.csv = V1 Step 10 output = V2 input (not in git)
+  final_preprocessed_data_v2/  V2 model-ready Parquet files (not in git)
+  final_preprocessed_data/, processed_data/, step13_artifacts/   V1 backups (not in git)
+Notebooks use repo-root-relative paths; .vscode/settings.json sets the
+Jupyter working directory to the repo root. Files were reorganized into
+this layout on 2026-10-05 AFTER the V2 run, so metadata_v2.json still
+records the old root-level path of accepted_quality_clean.csv.
+The V1 notebook (accepted_preprocessing.ipynb) is archived; its file
+paths were updated to this layout (audits -> reports/preprocessing_v1_audits/,
+big CSVs -> data/interim/), but its saved cell outputs are from the
+original run and still print the old root-level file names.
+
 STATUS: Accepted-loan Preprocessing V2 is DONE. Do NOT re-run it.
 -----------------------------------------------------------------
 - Run on 2026-10-05 by Claude (Claude Code, Opus 5.5) with:
       python run_preprocessing_v2.py
 - Result: PREPROCESSING V2: COMPLETE - 72 audits, 0 FAIL, 0 WARN,
   fresh-session inference test PASSED.
-- accepted_preprocessing_v2.ipynb calls the SAME stage functions
+- notebooks/accepted_preprocessing_v2.ipynb calls the SAME stage functions
   (src/preprocessing_v2/run.py). It was intentionally NOT executed,
   so its cells have no saved outputs. That is expected, not a problem.
   Do not run it "to fill in the outputs": it would only rewrite

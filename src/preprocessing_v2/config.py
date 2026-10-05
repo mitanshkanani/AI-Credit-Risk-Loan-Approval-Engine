@@ -13,8 +13,9 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RAW_ACCEPTED_PATH = PROJECT_ROOT / "data" / "accepted_2007_to_2018Q4.csv"
 
-# Step 10 output of accepted_preprocessing.ipynb (Steps 1-10 are kept).
-BASE_DATASET_PATH = PROJECT_ROOT / "accepted_quality_clean.csv"
+# Step 10 output of notebooks/accepted_preprocessing.ipynb (Steps 1-10 are kept).
+BASE_DATASET_PATH = PROJECT_ROOT / "data" / "interim" / "accepted_quality_clean.csv"
+V1_AUDIT_DIR = PROJECT_ROOT / "reports" / "preprocessing_v1_audits"
 
 OUTPUT_DIR = PROJECT_ROOT / "final_preprocessed_data_v2"
 # Temporary per-split raw rows (keeps memory low); deleted after the run.

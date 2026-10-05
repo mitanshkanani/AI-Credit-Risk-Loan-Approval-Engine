@@ -33,7 +33,7 @@ PHASES = {
 # item kinds: ("p", text) paragraph, ("b", text) bullet, ("o", text) output line,
 #             ("t", [[cells], ...]) table, ("h", text) sub-heading
 STEPS = [
-    ("v1", "1", "Load the raw data and define the prediction point", "accepted_preprocessing.ipynb · Step 1", [
+    ("v1", "1", "Load the raw data and define the prediction point", "notebooks/accepted_preprocessing.ipynb · Step 1", [
         ("p", "Loaded LendingClub accepted_2007_to_2018Q4.csv: 2,260,701 loans × 151 columns."),
         ("p", "Ground rule for the whole project: the model scores a NEW application, so it may only use information "
               "that exists at or before the application / underwriting decision. Every later step enforces this rule."),
@@ -57,7 +57,7 @@ STEPS = [
     ("v1", "5", "Audit every column", "Step 5", [
         ("p", "For all 152 columns (151 + target): data type, missing count and %, number of unique values, sample values."),
         ("p", "Found 40 columns ≥ 80% missing and 7 constant / single-value columns."),
-        ("o", "accepted_column_audit.csv"),
+        ("o", "reports/preprocessing_v1_audits/accepted_column_audit.csv"),
     ]),
     ("v1", "6", "Application-time vs future-time audit (the leakage review)", "Step 6", [
         ("p", "Every column was put in exactly one class, by asking: would we know this value when the application arrives?"),
@@ -67,29 +67,29 @@ STEPS = [
         ("b", "4 LendingClub-derived columns kept for review: int_rate, installment, grade, sub_grade (LendingClub's own risk view)."),
         ("b", "Other: 4 text / high-cardinality (emp_title, desc, title, zip_code), 1 historical date (earliest_cr_line), "
               "2 target (loan_status, target), 2 identifiers (id, member_id), 3 administrative (url, policy_code, initial_list_status)."),
-        ("o", "accepted_timing_audit.csv"),
+        ("o", "reports/preprocessing_v1_audits/accepted_timing_audit.csv"),
     ]),
     ("v1", "7", "Remove target, leakage, identifiers and administrative columns", "Step 7", [
         ("p", "Dropped 49 columns = 2 target + 2 identifiers + 3 administrative + 42 post-prediction. "
               "Result: 1,348,099 rows × 103 candidate columns. Checks confirmed no target, id or future column remains."),
-        ("o", "accepted_step7_removal_audit.csv, accepted_model_candidates.csv"),
+        ("o", "reports/preprocessing_v1_audits/accepted_step7_removal_audit.csv, data/interim/accepted_model_candidates.csv"),
     ]),
     ("v1", "8", "Data-quality investigation", "Step 8", [
         ("p", "Checked missingness, all-missing columns, constant columns, duplicate column names, columns with identical "
               "content, duplicate rows, infinite values, numeric ranges and categorical cardinality. Nothing needed "
               "removing, so the dataset stays 1,348,099 × 103."),
-        ("o", "accepted_step8_quality_audit.csv, accepted_quality_clean.csv  (the starting point for V2)"),
+        ("o", "reports/preprocessing_v1_audits/accepted_step8_quality_audit.csv, data/interim/accepted_quality_clean.csv (V2 input)"),
     ]),
     ("v1", "9", "Feature semantics and representation plan", "Step 9", [
         ("p", "Each column labelled numeric / categorical / date / free text / LendingClub-derived, with a planned "
               "treatment. Key decisions: desc (free text) is left out of the first version because it needs NLP; "
               "earliest_cr_line becomes a date-based feature; emp_title / title need a high-cardinality encoder."),
-        ("o", "accepted_step9_representation_plan.csv"),
+        ("o", "reports/preprocessing_v1_audits/accepted_step9_representation_plan.csv"),
     ]),
     ("v1", "10", "Missing-value strategy", "Step 10", [
         ("p", "Columns bucketed by missingness, with a strategy for each. Rule carried into V2: every imputation value "
               "(median, category, ...) must be learned from TRAINING data only, never from validation or test."),
-        ("o", "accepted_step10_missing_audit.csv, accepted_step10_missing_strategy.csv"),
+        ("o", "reports/preprocessing_v1_audits/accepted_step10_missing_audit.csv, reports/preprocessing_v1_audits/accepted_step10_missing_strategy.csv"),
     ]),
     ("warn", "!", "Why V1 Steps 11-16 were replaced by Preprocessing V2", "review outcome", [
         ("p", "V1 finished with a random 80/10/10 split and 1,943 columns, but a review found five problems:"),

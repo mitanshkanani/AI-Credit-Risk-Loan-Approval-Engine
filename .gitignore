@@ -1,11 +1,7 @@
-# Raw and processed data folders
+# Raw, interim (data/interim/, 600+ MB CSVs) and processed data folders
 data/
 processed_data/
 final_preprocessed_data/
-
-# Large intermediate datasets (600+ MB each)
-accepted_model_candidates.csv
-accepted_quality_clean.csv
 
 # Generic data / binary formats
 *.parquet

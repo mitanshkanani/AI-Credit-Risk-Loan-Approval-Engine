@@ -9,7 +9,7 @@ from . import config
 
 def removed_features_table(ctx):
     rows = []
-    step7 = pd.read_csv(config.PROJECT_ROOT / "accepted_step7_removal_audit.csv")
+    step7 = pd.read_csv(config.V1_AUDIT_DIR / "accepted_step7_removal_audit.csv")
     for row in step7.itertuples(index=False):
         rows.append(("V1 Step 7 (carried over)", row.column, row.reason))
     for column, reason in config.DROPPED_BY_DESIGN.items():

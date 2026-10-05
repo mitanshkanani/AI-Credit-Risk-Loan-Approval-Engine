@@ -1,3 +1,4 @@
+# Run from the repo root: python scripts/generate_eda_reports.py
 import pandas as pd
 import sweetviz as sv
 
@@ -7,7 +8,7 @@ accepted = pd.read_csv("data/accepted_2007_to_2018Q4.csv")
 print("Generating accepted report...")
 accepted["id"] = accepted["id"].astype(str)
 accepted_report = sv.analyze(accepted)
-accepted_report.show_html("accepted_dataset_report.html")
+accepted_report.show_html("reports/eda/accepted_dataset_report.html")
 
 print("Accepted report complete.")
 
@@ -16,7 +17,7 @@ rejected = pd.read_csv("data/rejected_2007_to_2018Q4.csv")
 
 print("Generating rejected report...")
 rejected_report = sv.analyze(rejected)
-rejected_report.show_html("rejected_dataset_report.html")
+rejected_report.show_html("reports/eda/rejected_dataset_report.html")
 
 print("Rejected report complete.")
 print("Both reports generated successfully.")
