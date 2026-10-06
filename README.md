@@ -56,6 +56,10 @@ negative numbers, fractional counts, impossible combinations and future dates ar
 credit-bureau data are never auto-approved; derogatory records and missing values are never shown as "strengths".
 On the test set these rules change 123 of 212,801 decisions (0.06%; `models/final/06_v1_1_guardrails/`).
 
+**v1.3:** a job or loan title never seen in training is treated as *not provided*, so a made-up title can no longer lower the PD.
+This one changes a model input: on the test set it touches 19% of loans and 5,833 decisions; ROC-AUC 0.7465 → 0.7456, mean PD
+20.3% vs 20.1% actual, approved-book default rate 11.6% → 11.4%. The headline test results above are for the frozen v1.0 policy.
+
 **Known limitations:** trained on approved loans only; monotonic constraints cover FICO, DTI, income, term, inquiries and
 utilisation, while delinquency, public-record and credit-age effects were learned from approved loans and can be weak or
 counter-intuitive; job title and state can act as proxies. Planned v2: retrain without free-text titles and with constraints

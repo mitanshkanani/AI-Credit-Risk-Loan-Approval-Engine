@@ -19,7 +19,7 @@ def client():
 
 def test_health_and_page():
     with client() as c:
-        assert c.get("/api/health").json() == {"status": "ok", "model": "M3-B-mono-nozip", "version": "1.0.0", "policy_version": "1.2.0"}
+        assert c.get("/api/health").json() == {"status": "ok", "model": "M3-B-mono-nozip", "version": "1.0.0", "policy_version": "1.3.0"}
         page = c.get("/")
         assert page.status_code == 200 and "Credit Risk" in page.text
         assert c.get("/docs").status_code == 200
@@ -65,6 +65,14 @@ def test_bad_inputs_get_422_with_a_message():
             r = c.post("/api/score", json=bad)
             assert r.status_code == 422, bad
             assert words in str(r.json()["detail"]), r.json()
+
+
+def test_unknown_job_title_never_helps():
+    with client() as c:
+        s = c.get("/api/samples").json()[0]["application"]
+        fake = c.post("/api/score", json={**s, "emp_title": "asdfqwer"}).json()
+        blank = c.post("/api/score", json={**s, "emp_title": None}).json()
+        assert fake["probability_of_default"] == blank["probability_of_default"]
 
 
 def test_model_card():

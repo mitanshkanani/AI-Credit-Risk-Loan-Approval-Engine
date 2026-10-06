@@ -19,7 +19,7 @@ from datetime import date
 
 import pandas as pd
 
-GUARDRAILS_VERSION = "1.2.0"
+GUARDRAILS_VERSION = "1.3.0"
 
 # Required for a hand-entered application (besides loan_amnt and term, checked by the engine)
 CORE_FIELDS = ["annual_inc", "dti", "fico_range_low", "earliest_cr_line", "home_ownership",

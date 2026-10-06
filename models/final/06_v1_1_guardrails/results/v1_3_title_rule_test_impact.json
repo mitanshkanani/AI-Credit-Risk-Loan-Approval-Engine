@@ -1,0 +1,16 @@
+{
+  "test_loans": 212801,
+  "emp_title_unseen_loans": 41195,
+  "title_unseen_loans": 1,
+  "loans_touched": 41195,
+  "share_touched": 0.19358461661364373,
+  "decisions_changed": 5833,
+  "roc_auc_v1_0": 0.746488284438561,
+  "roc_auc_with_title_rule": 0.74557561112883,
+  "mean_pd_v1_0": 0.19632899996793438,
+  "mean_pd_with_title_rule": 0.2026231367032288,
+  "default_rate": 0.20058176418343898,
+  "approve_default_rate_v1_0": 0.11602163317837526,
+  "approve_default_rate_with_title_rule": 0.11391667266316471,
+  "approve_share_with_title_rule": 0.6530514424274322
+}

@@ -197,6 +197,9 @@ Modeling progress (models/)
   parsing (no 500s), whole-number counts, open_acc <= total_acc; derogatory /
   missing values never shown as strengths; API docs + /api/health show
   policy_version 1.2.0. Test impact now 123/212,801.
+  v1.3: unseen emp_title/title -> treated as missing (strict mode only);
+  test impact 19% loans, 5,833 decisions, AUC 0.7465->0.7456
+  (06_v1_1_guardrails/check_title_rule.py). User decided: NO retraining.
   PROJECT (accepted loans) COMPLETE. Possible next: rejected-loans part 2,
   v1.1 term-specific calibration (needs newer data), project summary PDF.
   Stage 6 details: Folder deploy/:

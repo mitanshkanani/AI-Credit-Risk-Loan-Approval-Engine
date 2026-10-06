@@ -105,6 +105,8 @@ class CreditRiskEngine:
             values = np.asarray(X, dtype=object)
             return np.column_stack([[lookup.get(v, prior) for v in values[:, j]] for j, lookup in enumerate(lookups)]).astype(np.float64)
 
+        names = list(self.preprocessor.named_steps["encode"].named_transformers_["te"].feature_names_in_)
+        self.known_categories = {name: set(lookup) for name, lookup in zip(names, lookups)}
         self._sklearn_te_transform = te.transform
         te.transform = fast_transform
 
@@ -140,6 +142,12 @@ class CreditRiskEngine:
                     raise gr.InputError("fico_range_low must be between 300 and 850")
         except gr.InputError as err:
             raise ApplicationError(str(err)) from None
+        if strict:   # v1.3: a job / loan title never seen in training must not beat a real one (audit finding)
+            for field in ("emp_title", "title"):
+                value = app.get(field)
+                if value not in (None, "") and str(value).strip().lower() not in self.known_categories[field]:
+                    app[field] = None
+                    warnings.append(f"{field} '{value}' was not seen in training; treated as not provided")
         if strict and gr.fill_title(app):
             warnings.append(f"loan title not given; filled from the purpose as '{app['title']}' (as LendingClub's form did)")
 
