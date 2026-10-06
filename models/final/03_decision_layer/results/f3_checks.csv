@@ -1,0 +1,5 @@
+check,required,result
+risk bands: default rate rises band to band,True,PASS
+expected loss within +-10% of realised loss,True,PASS
+review queue <= 35% of applicants,False,PASS
+approved book default rate <= 12% (out-of-fold PD),True,PASS

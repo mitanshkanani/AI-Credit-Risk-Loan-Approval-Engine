@@ -1,0 +1,89 @@
+{
+  "version": "1.0",
+  "stage": 3,
+  "model": "M3-B-mono-nozip",
+  "model_file": "models/final/02_reason_codes_fairness/results/final_model.txt",
+  "calibrator_file": "models/final/02_reason_codes_fairness/results/calibrator.json",
+  "risk_bands": [
+    {
+      "band": "R1",
+      "pd_lower": 0.0,
+      "pd_upper": 0.05,
+      "label": "very low risk"
+    },
+    {
+      "band": "R2",
+      "pd_lower": 0.05,
+      "pd_upper": 0.1,
+      "label": "low risk"
+    },
+    {
+      "band": "R3",
+      "pd_lower": 0.1,
+      "pd_upper": 0.15,
+      "label": "moderate risk"
+    },
+    {
+      "band": "R4",
+      "pd_lower": 0.15,
+      "pd_upper": 0.2,
+      "label": "elevated risk"
+    },
+    {
+      "band": "R5",
+      "pd_lower": 0.2,
+      "pd_upper": 0.3,
+      "label": "high risk"
+    },
+    {
+      "band": "R6",
+      "pd_lower": 0.3,
+      "pd_upper": 0.4,
+      "label": "very high risk"
+    },
+    {
+      "band": "R7",
+      "pd_lower": 0.4,
+      "pd_upper": 1.0,
+      "label": "severe risk"
+    }
+  ],
+  "thresholds": {
+    "approve_max_pd": 0.225,
+    "decline_min_pd": 0.275
+  },
+  "business_targets": {
+    "approved_book_max_default_rate": 0.12,
+    "decline_group_min_default_rate": 0.4,
+    "threshold_grid_step": 0.005,
+    "chosen_on": "validation (2015 H1), out-of-fold calibrated PD"
+  },
+  "loss_model": {
+    "ead_share": {
+      "36": 0.5725004842011797,
+      "60": 0.7053992086165365
+    },
+    "lgd": {
+      "36": 0.8868319979622664,
+      "60": 0.8882969494737104
+    },
+    "estimated_on": "defaulted training loans (2012-08..2014-12)",
+    "formula": "EL = PD x loan_amnt x ead_share[term] x lgd[term]",
+    "defaulted_loans": 66928
+  },
+  "validation_summary": {
+    "APPROVE": {
+      "share": 0.6470797873974623,
+      "default_rate": 0.11901167041753316
+    },
+    "REVIEW": {
+      "share": 0.09755752864911364,
+      "default_rate": 0.24620520249417396
+    },
+    "DECLINE": {
+      "share": 0.25536268395342404,
+      "default_rate": 0.40130898241054885
+    }
+  },
+  "test_split": "sealed"
+}

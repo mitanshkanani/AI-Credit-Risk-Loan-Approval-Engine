@@ -134,6 +134,20 @@ Modeling progress (models/)
   build_f2_pdf.py is written and tested on smoke outputs (2 pages).
   NOTE: results/*.txt is gitignored, so final_model.txt will not be in git;
   the Stage 6 deployment package must include the final model file.
+- Final Stage 3 (decision layer): DONE LOCALLY (2026-10-06; light work, no
+  training), PDF sent; COMMITTED after user OK.
+  Folder models/final/03_decision_layer/. extract_loss_table.py reads the raw
+  CSV in chunks -> results/loss_table.parquet (train+validation only, gitignored).
+  Loss model from defaulted TRAIN loans: EAD share 0.573 (36m) / 0.705 (60m),
+  LGD 0.887 / 0.888; EL = PD x loan_amnt x ead_share x lgd.
+  Bands R1..R7 at PD 5/10/15/20/30/40%. Business targets: approved book
+  default <= 12%, declined group default >= 40% (0.5-pt grid, OOF PD).
+  Policy: APPROVE PD <= 22.5% (64.7%, 11.9% default), REVIEW 9.8%,
+  DECLINE PD >= 27.5% (25.5%, 40.1% default). EL back-test 0.94x real loss
+  (60m 0.91x - same under-prediction as Stage 1). All required checks PASS.
+  Everything in results/decision_policy.json, applied by
+  src/modeling/decision.py (calibrate, risk_band, decide, expected_loss,
+  apply_policy) - reuse it in Stages 4-6.
 - Planned Stage 6 (user asked): FastAPI scoring service + small web front end,
   deployed together at one public link for the resume (e.g. one Docker app on
   Hugging Face Spaces). Do it after Stages 3-5.

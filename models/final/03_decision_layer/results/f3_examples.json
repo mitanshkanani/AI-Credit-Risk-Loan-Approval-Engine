@@ -1,0 +1,59 @@
+[
+  {
+    "probability_of_default": 0.2002,
+    "risk_band": "R5",
+    "decision": "APPROVE",
+    "loan_amount": 14400.0,
+    "term_months": 60,
+    "expected_loss_usd": 1806.39,
+    "reasons": [
+      "Loan term: 60 months",
+      "Credit score (FICO): 660",
+      "Accounts opened in the last 24 months: 6",
+      "Accounts opened in the last 12 months: 3"
+    ],
+    "strengths": [
+      "State: OR",
+      "Job title (historical default rate of similar titles): 11.7%"
+    ],
+    "actual_outcome": "repaid"
+  },
+  {
+    "probability_of_default": 0.2251,
+    "risk_band": "R5",
+    "decision": "REVIEW",
+    "loan_amount": 14525.0,
+    "term_months": 60,
+    "expected_loss_usd": 2049.13,
+    "reasons": [
+      "Loan term: 60 months",
+      "Unused bankcard credit: $3",
+      "Credit score (FICO): 680",
+      "Revolving credit utilisation: 100.0%"
+    ],
+    "strengths": [
+      "Installment accounts: 18",
+      "Annual income: $79,000"
+    ],
+    "actual_outcome": "repaid"
+  },
+  {
+    "probability_of_default": 0.383,
+    "risk_band": "R6",
+    "decision": "DECLINE",
+    "loan_amount": 24000.0,
+    "term_months": 60,
+    "expected_loss_usd": 5759.47,
+    "reasons": [
+      "Loan term: 60 months",
+      "Loan amount: $24,000",
+      "Loan title (historical default rate): 21.7%",
+      "Months since the most recent credit inquiry: 0 months"
+    ],
+    "strengths": [
+      "Annual income: $150,000",
+      "Debt-to-income ratio: 3.3%"
+    ],
+    "actual_outcome": "defaulted"
+  }
+]
