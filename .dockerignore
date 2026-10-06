@@ -1,0 +1,11 @@
+data/
+final_preprocessed_data*/
+processed_data/
+step13_artifacts/
+notebooks/
+reports/
+models/M*/
+deploy/space/
+.playwright-mcp/
+**/__pycache__/
+*.parquet

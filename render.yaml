@@ -1,0 +1,9 @@
+# Render blueprint: free web service built from the root Dockerfile
+services:
+  - type: web
+    name: credit-risk-engine
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
