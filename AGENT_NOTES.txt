@@ -182,6 +182,16 @@ Modeling progress (models/)
   Hugging Face Docker Spaces need PRO (402) -> not used (deploy/build_space.py
   kept for that option). Engine caches TargetEncoder lookups at start-up
   (identical output, tested): ~0.7 s/score on Render, 0.12 s locally.
+  v1.1 GUARDRAILS (after friend's black-box audit): src/engine/guardrails.py.
+  Model/calibrator/thresholds UNCHANGED. Strict input checks (10 core fields
+  required, known categories only, no negatives, no future dates), title
+  filled from purpose, REFER if outside training range (FICO<660, DTI>40,
+  loan outside 1k-35k, income<3k, util>150, inq>8, history<36m), APPROVE ->
+  REVIEW if bureau coverage <50%. Output adds model_decision, guardrail_notes,
+  bureau_data_coverage. Test impact: 74/212,801 loans changed, AUC unchanged
+  (models/final/06_v1_1_guardrails/). UI: two modes (real sample / own
+  application), no novalidate. v2 ideas: drop title/emp_title, more
+  monotonic constraints (needs retraining).
   PROJECT (accepted loans) COMPLETE. Possible next: rejected-loans part 2,
   v1.1 term-specific calibration (needs newer data), project summary PDF.
   Stage 6 details: Folder deploy/:

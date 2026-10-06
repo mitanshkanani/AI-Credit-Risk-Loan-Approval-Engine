@@ -52,7 +52,13 @@ INVALID = {
     "negative income": {**SPARSE_APPLICATION, "annual_inc": -5},
     "bad credit-line date": {**SPARSE_APPLICATION, "earliest_cr_line": "2010-03-01"},
     "not a dict": ["loan_amnt", 1000],
+    "core fields missing": {"loan_amnt": 5000, "term": 36},
+    "unknown home ownership": {**SPARSE_APPLICATION, "home_ownership": "banana"},
+    "credit line in the future": {**SPARSE_APPLICATION, "earliest_cr_line": "Jan-2030"},
+    "negative delinquencies": {**SPARSE_APPLICATION, "delinq_2yrs": -3},
 }
+OUT_OF_SCOPE = {"FICO 300": {**SPARSE_APPLICATION, "fico_range_low": 300}, "DTI 60": {**SPARSE_APPLICATION, "dti": 60},
+                "loan $1,000,000": {**SPARSE_APPLICATION, "loan_amnt": 1_000_000}}
 
 
 def main():
@@ -115,9 +121,9 @@ def main():
           f"max |diff| {float(np.abs(fast_X.to_numpy() - sklearn_X.to_numpy()).max()):.1e}")
 
     # 3. single == batch
-    singles = [engine.score(raw.iloc[i][engine.raw_fields].to_dict()) for i in range(20)]
+    singles = [engine.score(raw.iloc[i][engine.raw_fields].to_dict(), strict=False) for i in range(20)]
     single_vs_batch = max(abs(s["probability_of_default"] - scored["pd"].iloc[i]) for i, s in enumerate(singles))
-    same_single_decisions = all(s["decision"] == scored["decision"].iloc[i] for i, s in enumerate(singles))
+    same_single_decisions = all(s["model_decision"] == scored["decision"].iloc[i] for i, s in enumerate(singles))
     check("single-application scoring agrees with batch scoring (20 loans)",
           single_vs_batch <= 5e-5 and same_single_decisions,
           f"max |diff| {single_vs_batch:.1e} (PD is rounded to 4 decimals in the JSON); decisions equal {same_single_decisions}")
@@ -140,6 +146,14 @@ def main():
             rejected[name] = str(err)
     check("impossible inputs are rejected with a message", all(v != "ACCEPTED" for v in rejected.values()),
           "; ".join(f"{k}: {v}" for k, v in rejected.items()))
+
+    # 5b. v1.1 guardrails
+    refer = {name: engine.score(app)["decision"] for name, app in OUT_OF_SCOPE.items()}
+    thin = engine.score(SPARSE_APPLICATION)
+    check("v1.1: out-of-scope applicants are REFERred, thin bureau data never auto-approved",
+          all(d == "REFER" for d in refer.values()) and thin["decision"] != "APPROVE",
+          f"{refer}; sparse application: model {thin['model_decision']} -> {thin['decision']} "
+          f"(bureau coverage {thin['bureau_data_coverage']:.0%})")
 
     # 6. determinism and monotonic behaviour
     again = engine.score(SPARSE_APPLICATION)

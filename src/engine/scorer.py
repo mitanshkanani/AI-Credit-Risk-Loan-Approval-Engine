@@ -28,6 +28,7 @@ import numpy as np
 import pandas as pd
 import sklearn
 
+from src.engine import guardrails as gr
 from src.modeling import decision as dl
 from src.modeling import reason_codes as rc
 from src.preprocessing_v2 import features as _features  # noqa: F401  (classes the pickled preprocessor needs)
@@ -82,6 +83,10 @@ class CreditRiskEngine:
         self.model_fields = self.manifest["model_input_fields"]
         if self.booster.num_feature() != len(self.features):
             raise RuntimeError("model and manifest disagree on the number of features")
+        text_fields = {"term", "earliest_cr_line", "emp_title", "title", *gr.CATEGORIES}
+        self.numeric_fields = [f for f in self.model_fields if f not in text_fields]
+        form_fields = {"loan_amnt", "term", "title", "emp_title", *gr.CORE_FIELDS}
+        self.bureau_fields = [f for f in self.model_fields if f not in form_fields]
         self._cache_target_encoder()
 
     def _cache_target_encoder(self):
@@ -104,8 +109,11 @@ class CreditRiskEngine:
         te.transform = fast_transform
 
     # ------------------------------------------------------------------ input handling
-    def _prepare(self, application):
-        """Validate one application; return (clean dict, missing model fields, warnings)."""
+    def _prepare(self, application, strict=True):
+        """Validate one application; return (clean dict, missing model fields, warnings).
+
+        strict=True (default, v1.1): core fields required and every value checked (see guardrails.py).
+        """
         if not isinstance(application, dict):
             raise ApplicationError("an application must be a JSON object / dict")
         app = {k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in application.items()}
@@ -128,6 +136,13 @@ class CreditRiskEngine:
         fico = app.get("fico_range_low")
         if fico is not None and not 300 <= float(fico) <= 850:
             raise ApplicationError("fico_range_low must be between 300 and 850")
+        if strict:
+            try:
+                gr.validate(app, self.numeric_fields)
+            except gr.InputError as err:
+                raise ApplicationError(str(err)) from None
+            if gr.fill_title(app):
+                warnings.append(f"loan title not given; filled from the purpose as '{app['title']}' (as LendingClub's form did)")
 
         if not app.get("issue_d"):
             app["issue_d"] = date.today().strftime("%b-%Y")
@@ -152,16 +167,23 @@ class CreditRiskEngine:
         out = dl.apply_policy(pd_cal, frame["loan_amnt"].astype(float).to_numpy(), term, self.policy)
         return pd.DataFrame(out, index=frame.index)
 
-    def score(self, application, n_reasons=4, n_strengths=2):
-        """One application -> the full decision as a JSON-ready dict."""
+    def score(self, application, n_reasons=4, n_strengths=2, strict=True):
+        """One application -> the full decision as a JSON-ready dict.
+
+        `model_decision` is the frozen v1.0 policy applied to the PD; `decision` adds the v1.1 guardrails
+        (REFER when out of the training scope, REVIEW instead of APPROVE when bureau data is too thin).
+        """
         start = time.perf_counter()
-        app, missing, warnings = self._prepare(application)
+        app, missing, warnings = self._prepare(application, strict=strict)
         X = self.transform([app])
         pd_cal = float(dl.calibrate(self.booster.predict(X), self.calibrator)[0])
         term = int(X["term_months"].iloc[0])
         result = dl.apply_policy([pd_cal], [float(app["loan_amnt"])], [term], self.policy)
         band = str(result["risk_band"][0])
-        decision = str(result["decision"][0])
+        model_decision = str(result["decision"][0])
+        coverage = 1 - sum(f in missing for f in self.bureau_fields) / len(self.bureau_fields)
+        issues = gr.scope_issues(app, float(X["credit_history_months"].iloc[0])) if strict else []
+        decision, notes = gr.final_decision(model_decision, issues, coverage) if strict else (model_decision, [])
         concepts = rc.concept_shap(self.booster.predict(X, pred_contrib=True), self.features)
         reasons = rc.explain(concepts.iloc[0], X.iloc[0], n_risk=n_reasons, n_protective=n_strengths)
         for item in reasons["risk_factors"] + reasons["protective_factors"]:
@@ -171,18 +193,24 @@ class CreditRiskEngine:
                 item["reason"] = f"{name}: not provided (applicants without one default at {float(X[item['concept']].iloc[0]):.1%})"
         t = self.policy["thresholds"]
         rule = {"APPROVE": f"PD <= {t['approve_max_pd']:.1%}", "DECLINE": f"PD >= {t['decline_min_pd']:.1%}",
-                "REVIEW": f"{t['approve_max_pd']:.1%} < PD < {t['decline_min_pd']:.1%}"}[decision]
+                "REVIEW": f"{t['approve_max_pd']:.1%} < PD < {t['decline_min_pd']:.1%}"}[model_decision]
+        if decision != model_decision:
+            rule = "guardrail: " + ("out of scope" if decision == "REFER" else "insufficient credit-bureau data")
         if missing:
             warnings.append(f"{len(missing)} model input(s) not provided; the training medians / 'missing' "
                             "encodings were used (see missing_fields)")
         return {
-            "model": {"name": self.manifest["model_name"], "version": self.manifest["version"]},
+            "model": {"name": self.manifest["model_name"], "version": self.manifest["version"],
+                      "policy_version": gr.GUARDRAILS_VERSION},
             "application_month": app["issue_d"],
             "probability_of_default": round(pd_cal, 4),
             "risk_band": band,
             "risk_band_label": next(b["label"] for b in self.policy["risk_bands"] if b["band"] == band),
             "decision": decision,
             "decision_rule": rule,
+            "model_decision": model_decision,
+            "guardrail_notes": notes,
+            "bureau_data_coverage": round(coverage, 3),
             "loan_amount": float(app["loan_amnt"]),
             "term_months": term,
             "expected_loss_usd": round(float(result["expected_loss"][0]), 2),

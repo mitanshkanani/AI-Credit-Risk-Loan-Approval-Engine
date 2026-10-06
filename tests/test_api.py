@@ -35,20 +35,28 @@ def test_samples_score_as_labelled():
             assert r.json()["decision"] == s["expected_decision"]
 
 
-def test_minimal_application():
+def test_minimal_application_needs_core_fields():
     with client() as c:
         r = c.post("/api/score", json={"loan_amnt": 10000, "term": 36})
-        body = r.json()
-        assert r.status_code == 200
-        assert 0 < body["probability_of_default"] < 1 and body["decision"] in ("APPROVE", "REVIEW", "DECLINE")
-        assert len(body["missing_fields"]) == 63
+        assert r.status_code == 422 and "required fields missing" in r.json()["detail"]
+
+
+def test_guardrails():
+    with client() as c:
+        s = c.get("/api/samples").json()[0]["application"]
+        assert c.post("/api/score", json={**s, "fico_range_low": 300}).json()["decision"] == "REFER"
+        core = {k: s[k] for k in ("loan_amnt", "term", "annual_inc", "dti", "fico_range_low", "earliest_cr_line",
+                                  "home_ownership", "verification_status", "purpose", "addr_state", "revol_util", "inq_last_6mths")}
+        body = c.post("/api/score", json=core).json()
+        assert body["decision"] != "APPROVE" and body["bureau_data_coverage"] < 0.5
 
 
 def test_bad_inputs_get_422_with_a_message():
     with client() as c:
         for bad, words in [({"term": 36}, "loan_amnt"), ({"loan_amnt": 5000, "term": 48}, "36 or 60"),
                            ({"loan_amnt": 5000, "term": 36, "fico_range_low": 950}, "fico"),
-                           ({"loan_amnt": -1, "term": 36}, "loan_amnt")]:
+                           ({"loan_amnt": -1, "term": 36}, "loan_amnt"),
+                           ({"loan_amnt": 5000, "term": 36}, "required fields")]:
             r = c.post("/api/score", json=bad)
             assert r.status_code == 422, bad
             assert words in str(r.json()["detail"]), r.json()

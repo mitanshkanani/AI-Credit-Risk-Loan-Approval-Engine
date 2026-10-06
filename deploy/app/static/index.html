@@ -56,7 +56,7 @@ legend { font-weight: 600; font-size: 13px; margin-bottom: 8px; padding: 0; }
 label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--muted); }
 input, select { font: inherit; font-size: 14px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; width: 100%; }
 input:focus, select:focus { outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); border-color: var(--accent); }
-.bureau { display: flex; flex-direction: row; gap: 10px; align-items: flex-start; background: var(--soft); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--muted); margin: 4px 0 16px; }
+.bureau { display: block; gap: 10px; align-items: flex-start; background: var(--soft); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--muted); margin: 4px 0 16px; }
 .bureau input { width: auto; margin-top: 3px; }
 .actions { display: flex; gap: 10px; align-items: center; }
 button.primary { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 11px 20px; font: inherit; font-weight: 600; cursor: pointer; }
@@ -70,6 +70,13 @@ button.ghost { background: none; border: 1px solid var(--line); color: var(--ink
 .decision.APPROVE { background: var(--approve-bg); color: var(--approve); }
 .decision.REVIEW { background: var(--review-bg); color: var(--review); }
 .decision.DECLINE { background: var(--decline-bg); color: var(--decline); }
+.decision.REFER { background: var(--soft); color: var(--accent); border: 1px dashed var(--accent); }
+.guard { font-size: 13px; background: var(--review-bg); color: var(--ink); border-left: 3px solid var(--review); border-radius: 8px; padding: 9px 12px; margin-bottom: 14px; }
+.modes { display: flex; gap: 8px; margin-bottom: 12px; }
+.mode { flex: 1; border: 1px solid var(--line); background: var(--soft); color: var(--ink); border-radius: 10px; padding: 9px 10px; font: inherit; font-size: 13.5px; cursor: pointer; text-align: left; }
+.mode.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+.mode small { display: block; color: var(--muted); font-size: 12px; }
+.hidden { display: none !important; }
 .decision .rule { font-family: "JetBrains Mono", monospace; font-size: 12.5px; text-align: right; }
 .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
 .kpi { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
@@ -118,13 +125,17 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 24px; line-height: 
   <section class="stats" id="stats" aria-label="Model performance on the sealed test set"></section>
 
   <div class="grid">
-    <form class="panel" id="form" novalidate>
-      <h2>1 · Start from a real applicant</h2>
+    <form class="panel" id="form">
+      <h2>1 · Choose how to apply</h2>
+      <div class="modes">
+        <button type="button" class="mode active" data-mode="sample">Real 2015 applicant<small>full credit-bureau record included</small></button>
+        <button type="button" class="mode" data-mode="own">My own application<small>only what you type is used</small></button>
+      </div>
       <div class="samples" id="samples"></div>
 
       <h2>2 · Edit the application</h2>
       <fieldset><legend>Loan</legend><div class="fields">
-        <label>Amount (USD)<input name="loan_amnt" type="number" min="500" max="40000" step="25" required></label>
+        <label>Amount (USD)<input name="loan_amnt" required type="number" min="500" max="40000" step="any" required></label>
         <label>Term<select name="term"><option value="36">36 months</option><option value="60">60 months</option></select></label>
         <label>Purpose<select name="purpose">
           <option value="debt_consolidation">Debt consolidation</option><option value="credit_card">Credit card</option>
@@ -134,8 +145,8 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 24px; line-height: 
           <option value="wedding">Wedding</option><option value="other">Other</option></select></label>
       </div></fieldset>
       <fieldset><legend>Applicant</legend><div class="fields">
-        <label>Annual income (USD)<input name="annual_inc" type="number" min="0" step="500"></label>
-        <label>Debt-to-income (%)<input name="dti" type="number" min="0" max="100" step="0.1"></label>
+        <label>Annual income (USD)<input name="annual_inc" required type="number" min="0" step="any"></label>
+        <label>Debt-to-income (%)<input name="dti" required type="number" min="0" max="100" step="any"></label>
         <label>Employment length<select name="emp_length">
           <option value="">not given</option><option>&lt; 1 year</option><option>1 year</option><option>2 years</option><option>3 years</option>
           <option>4 years</option><option>5 years</option><option>6 years</option><option>7 years</option><option>8 years</option>
@@ -143,21 +154,20 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 24px; line-height: 
         <label>Job title<input name="emp_title" type="text" maxlength="60"></label>
         <label>Home ownership<select name="home_ownership"><option>RENT</option><option>MORTGAGE</option><option>OWN</option></select></label>
         <label>Income verification<select name="verification_status"><option>Verified</option><option>Source Verified</option><option>Not Verified</option></select></label>
-        <label>State<input name="addr_state" type="text" maxlength="2" pattern="[A-Za-z]{2}"></label>
+        <label>State<input name="addr_state" type="text" maxlength="2" pattern="[A-Za-z]{2}" required></label>
       </div></fieldset>
       <fieldset><legend>Credit profile</legend><div class="fields">
-        <label>FICO score<input name="fico_range_low" type="number" min="300" max="850" step="1"></label>
-        <label>First credit line (Mon-YYYY)<input name="earliest_cr_line" type="text" placeholder="Mar-2010"></label>
-        <label>Revolving utilisation (%)<input name="revol_util" type="number" min="0" max="150" step="0.1"></label>
-        <label>Revolving balance (USD)<input name="revol_bal" type="number" min="0" step="100"></label>
-        <label>Open credit lines<input name="open_acc" type="number" min="0" step="1"></label>
-        <label>Total credit lines<input name="total_acc" type="number" min="0" step="1"></label>
-        <label>Inquiries, last 6 months<input name="inq_last_6mths" type="number" min="0" step="1"></label>
-        <label>Delinquencies, last 2 years<input name="delinq_2yrs" type="number" min="0" step="1"></label>
-        <label>Public records<input name="pub_rec" type="number" min="0" step="1"></label>
+        <label>FICO score<input name="fico_range_low" required type="number" min="300" max="850" step="any"></label>
+        <label>First credit line (Mon-YYYY)<input name="earliest_cr_line" required type="text" placeholder="Mar-2010" pattern="[A-Za-z]{3}-[0-9]{4}" title="Month-Year, e.g. Mar-2010"></label>
+        <label>Revolving utilisation (%)<input name="revol_util" required type="number" min="0" max="150" step="any"></label>
+        <label>Revolving balance (USD)<input name="revol_bal" type="number" min="0" step="any"></label>
+        <label>Open credit lines<input name="open_acc" type="number" min="0" step="any"></label>
+        <label>Total credit lines<input name="total_acc" type="number" min="0" step="any"></label>
+        <label>Inquiries, last 6 months<input name="inq_last_6mths" required type="number" min="0" step="any"></label>
+        <label>Delinquencies, last 2 years<input name="delinq_2yrs" type="number" min="0" step="any"></label>
+        <label>Public records<input name="pub_rec" type="number" min="0" step="any"></label>
       </div></fieldset>
-      <label class="bureau"><input type="checkbox" id="useBureau" checked>
-        <span>Keep the sample's other <b id="bureauCount">0</b> credit-bureau fields (account counts, balances, limits…). Untick to leave them blank; the engine then uses typical training values and lists them as missing.</span></label>
+      <p class="bureau" id="modeNote"></p>
       <div class="actions">
         <button class="primary" id="submit" type="submit">Score application</button>
         <button class="ghost" id="reset" type="button">Reset to sample</button>
@@ -172,11 +182,11 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 24px; line-height: 
   </div>
 
   <footer>
-    <b>How it works:</b> raw application → fitted preprocessing (imputation, one-hot, target encoding) → LightGBM with monotonic constraints (146 features) →
+    <b>How it works:</b> raw application → fitted preprocessing (imputation, one-hot, target encoding) → LightGBM (146 features; monotonic constraints on FICO, DTI, income, term, inquiries and utilisation) →
     Platt calibration → decision policy (approve if PD ≤ <span id="tA">22.5%</span>, decline if PD ≥ <span id="tD">27.5%</span>) → expected loss = PD × amount × exposure × loss-given-default → SHAP reason codes.
     The model never sees LendingClub's grade or interest rate. <br>
     <b>Limitations:</b> <span id="limits"></span> <br>
-    Educational project. Not a real credit decision.
+    <b>v1.1 guardrails:</b> applicants outside the training data's range (e.g. FICO &lt; 660, DTI &gt; 40%, loans outside $1k–$35k) are REFERred to a person instead of scored; applications without most credit-bureau data are never auto-approved. <br>Educational project. Not a real credit decision.
   </footer>
 </div>
 
@@ -184,9 +194,9 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 24px; line-height: 
 const FORM_FIELDS = ["loan_amnt","term","purpose","annual_inc","dti","emp_length","emp_title","home_ownership","verification_status",
   "addr_state","fico_range_low","earliest_cr_line","revol_util","revol_bal","open_acc","total_acc","inq_last_6mths","delinq_2yrs","pub_rec"];
 const NUMERIC = new Set(["loan_amnt","annual_inc","dti","fico_range_low","revol_util","revol_bal","open_acc","total_acc","inq_last_6mths","delinq_2yrs","pub_rec"]);
-const COLORS = {APPROVE: "var(--approve)", REVIEW: "var(--review)", DECLINE: "var(--decline)"};
+const COLORS = {APPROVE: "var(--approve)", REVIEW: "var(--review)", DECLINE: "var(--decline)", REFER: "var(--accent)"};
 const form = document.getElementById("form"), resultBox = document.getElementById("result"), errorBox = document.getElementById("error");
-let samples = [], current = null, card = null, edited = false;
+let samples = [], current = null, card = null, edited = false, mode = "sample";
 const pct = x => (x * 100).toFixed(1) + "%";
 const usd = x => "$" + Math.round(x).toLocaleString("en-US");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -199,10 +209,27 @@ function fillForm(app) {
     el.value = v === null || v === undefined ? "" : v;
   }
   const extra = Object.keys(app).filter(k => !FORM_FIELDS.includes(k) && k !== "issue_d" && app[k] !== null).length;
-  document.getElementById("bureauCount").textContent = extra;
+  current.extraCount = extra;
+  updateModeNote();
+}
+
+function updateModeNote() {
+  const note = document.getElementById("modeNote");
+  note.innerHTML = mode === "sample"
+    ? `Scoring this real applicant <b>with their other ${current ? current.extraCount : 0} credit-bureau fields</b> (account counts, balances, limits…). If you edit the form, those fields still belong to this applicant. Choose <b>My own application</b> to score only what you type.`
+    : `Only the fields above are sent. The model's other credit-bureau inputs stay empty, so the engine fills them with typical values and <b>will not auto-approve</b>: an approval becomes REVIEW.`;
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll(".mode").forEach(b => b.classList.toggle("active", b.dataset.mode === m));
+  if (m === "own") { document.querySelectorAll(".sample").forEach(b => b.classList.remove("active")); edited = true; }
+  updateModeNote();
 }
 
 function selectSample(i) {
+  mode = "sample";
+  document.querySelectorAll(".mode").forEach(b => b.classList.toggle("active", b.dataset.mode === "sample"));
   current = samples[i];
   document.querySelectorAll(".sample").forEach((b, j) => b.classList.toggle("active", i === j));
   fillForm(current.application);
@@ -212,7 +239,7 @@ function selectSample(i) {
 
 function buildApplication() {
   const app = {};
-  if (current && document.getElementById("useBureau").checked) {
+  if (current && mode === "sample") {
     for (const [k, v] of Object.entries(current.application)) if (!FORM_FIELDS.includes(k) && k !== "issue_d") app[k] = v;
   }
   for (const name of FORM_FIELDS) {
@@ -232,6 +259,7 @@ function renderResult(r) {
   const sameSample = current && !edited;
   resultBox.innerHTML = `
     <h2>3 · Result</h2>
+    ${r.guardrail_notes.length ? `<div class="guard"><b>Guardrail:</b> ${esc(r.guardrail_notes.join(" "))}<br><small>The model alone would say ${r.model_decision}.</small></div>` : ""}
     <div class="decision ${r.decision}">
       <div><div class="label">Decision</div><div class="value">${r.decision}</div></div>
       <div class="rule">${esc(r.decision_rule)}<br>${r.risk_band} · ${esc(r.risk_band_label)}</div>
@@ -288,6 +316,7 @@ async function init() {
 
 form.addEventListener("submit", score);
 form.addEventListener("input", () => { edited = true; });
+document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => b.dataset.mode === "sample" ? (current && selectSample(samples.indexOf(current))) : setMode("own")));
 document.getElementById("reset").addEventListener("click", () => current && selectSample(samples.indexOf(current)));
 init().catch(err => { errorBox.textContent = "Could not reach the engine: " + err.message; });
 </script>

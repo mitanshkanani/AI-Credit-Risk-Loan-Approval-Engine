@@ -1,0 +1,27 @@
+{
+  "test_loans": 212801,
+  "changed_by_guardrails": 74,
+  "changed_share": 0.0003477427267729005,
+  "refer_out_of_scope": 74,
+  "out_of_scope_by_rule": {
+    "fico_range_low": 0,
+    "dti": 69,
+    "loan_amnt": 0,
+    "annual_inc": 4,
+    "revol_util": 3,
+    "inq_last_6mths": 0,
+    "credit_history_under_36_months": 0
+  },
+  "approve_to_review_thin_bureau": 0,
+  "roc_auc_unchanged": 0.746488284438561,
+  "v1_0": {
+    "approve_share": 0.6681782510420534,
+    "approve_default_rate": 0.11602163317837526
+  },
+  "v1_1": {
+    "approve_share": 0.6681218603296037,
+    "approve_default_rate": 0.11601735864450649,
+    "refer_share": 0.0003477427267729005,
+    "refer_default_rate": 0.22972972972972974
+  }
+}

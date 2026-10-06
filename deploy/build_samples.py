@@ -18,6 +18,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.engine import CreditRiskEngine  # noqa: E402
+from src.engine import guardrails as gr  # noqa: E402
 
 APP = Path(__file__).resolve().parent / "app"
 engine = CreditRiskEngine()
@@ -71,10 +72,8 @@ card = {
              "lendingclub_interest_rate_roc_auc": summary["lendingclub_int_rate_roc_auc"]},
     "thresholds": policy["thresholds"], "risk_bands": policy["risk_bands"],
     "loss_model": {k: policy["loss_model"][k] for k in ("ead_share", "lgd", "formula")},
-    "required_fields": ["loan_amnt", "term"], "input_fields": engine.model_fields,
-    "known_limitations": ["60-month loans are under-predicted by about 2.5 percentage points on the test set",
-                          "trained only on loans LendingClub approved; applicants it rejected were never seen",
-                          "educational demo, not a lending decision"],
+    "required_fields": ["loan_amnt", "term", *gr.CORE_FIELDS], "policy_version": gr.GUARDRAILS_VERSION, "input_fields": engine.model_fields,
+    "known_limitations": ["60-month loans are under-predicted by about 2.5 percentage points on the test set", "trained only on loans LendingClub approved (FICO >= 660, DTI < 40%): applicants outside that range are REFERred, not scored", "monotonic constraints cover FICO, DTI, income, term, inquiries and utilisation only; delinquency, public-record and credit-age effects were learned from approved loans and can be weak or counter-intuitive", "job title and state are inputs: they can act as proxies (zip code was removed for this reason)", "educational demo, not a lending decision"],
 }
 (APP / "model_card.json").write_text(json.dumps(card, indent=2), encoding="utf-8")
 print(f"wrote {len(samples)} samples:", [(s["name"], s["expected_decision"], s["actual_outcome"]) for s in samples])

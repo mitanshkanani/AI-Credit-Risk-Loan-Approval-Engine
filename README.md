@@ -49,6 +49,16 @@ With the decision policy, it approves **66.8%** of applicants at an **11.6%** de
 cuts realised losses per dollar lent from **13.6% to 6.2%**. Criteria were committed before the test set was opened; 7 of 8 were met.
 The miss is documented: 60-month loans are under-predicted by about 2.5 points.
 
+**v1.1 guardrails** (after an independent black-box audit; the model itself is unchanged): applicants outside the
+training data's range (FICO < 660, DTI > 40%, loans outside $1k–$35k, credit history < 3 years, …) are **REFERred** to a person
+instead of scored; core fields are required; unknown categories, negative counts and future dates are rejected; applications
+missing most credit-bureau data are never auto-approved. These rules change 74 of the 212,801 test loans (0.03%); ROC-AUC is unchanged.
+
+**Known limitations:** trained on approved loans only; monotonic constraints cover FICO, DTI, income, term, inquiries and
+utilisation, while delinquency, public-record and credit-age effects were learned from approved loans and can be weak or
+counter-intuitive; job title and state can act as proxies. Planned v2: retrain without free-text titles and with constraints
+on delinquency features.
+
 The work is done the way a real credit-risk team would do it. Every column is checked for **data leakage**, the model is evaluated on **later loans than it was trained on**, and every preprocessing step is **verified by automated audits**.
 
 ## ✨ Highlights
@@ -171,7 +181,7 @@ LendingClub assigns those *after* its own risk decision, so **B is the deployabl
 }
 ```
 
-A real response from the live API (a 2015 applicant from the validation set; this loan was in fact repaid: a PD is a probability, not a verdict). Only `loan_amnt` and `term` are required; any of the 65 input fields can be added, and missing ones are listed back.
+A real response from the live API (a 2015 applicant from the validation set; this loan was in fact repaid: a PD is a probability, not a verdict). Required: `loan_amnt`, `term` and 10 core fields (income, DTI, FICO, first credit line, home ownership, verification, purpose, state, utilisation, inquiries). Any of the 65 inputs can be added; missing ones are listed back. `decision` can also be `REFER` (out of scope); `model_decision` shows what the model alone would say.
 
 ## 📁 Repository structure
 

@@ -35,13 +35,19 @@
       "check": "sparse hand-written application -> complete JSON, no NaN",
       "status": "PASS",
       "required": true,
-      "detail": "PD 0.1008, R3, APPROVE, EL $614.4, 47 missing fields listed"
+      "detail": "PD 0.1008, R3, REVIEW, EL $614.4, 47 missing fields listed"
     },
     {
       "check": "impossible inputs are rejected with a message",
       "status": "PASS",
       "required": true,
-      "detail": "loan amount missing: loan_amnt (loan amount in USD) is required and must be a number; term of 48 months: term is required and must be 36 or 60 (months); FICO of 900: fico_range_low must be between 300 and 850; negative income: annual_inc cannot be negative; bad credit-line date: earliest_cr_line must look like 'Mar-2010'; not a dict: an application must be a JSON object / dict"
+      "detail": "loan amount missing: loan_amnt (loan amount in USD) is required and must be a number; term of 48 months: term is required and must be 36 or 60 (months); FICO of 900: fico_range_low must be between 300 and 850; negative income: annual_inc cannot be negative; bad credit-line date: earliest_cr_line must look like 'Mar-2010'; not a dict: an application must be a JSON object / dict; core fields missing: required fields missing: annual_inc, dti, fico_range_low, earliest_cr_line, home_ownership, verification_status, purpose, addr_state, revol_util, inq_last_6mths; unknown home ownership: home_ownership must be one of: MORTGAGE, OWN, RENT; credit line in the future: earliest_cr_line cannot be in the future; negative delinquencies: delinq_2yrs cannot be negative"
+    },
+    {
+      "check": "v1.1: out-of-scope applicants are REFERred, thin bureau data never auto-approved",
+      "status": "PASS",
+      "required": true,
+      "detail": "{'FICO 300': 'REFER', 'DTI 60': 'REFER', 'loan $1,000,000': 'REFER'}; sparse application: model APPROVE -> REVIEW (bureau coverage 8%)"
     },
     {
       "check": "same input -> same output",
@@ -59,20 +65,26 @@
       "check": "one application scored in under 200 ms (median of 50)",
       "status": "PASS",
       "required": false,
-      "detail": "median 124 ms, p95 138 ms"
+      "detail": "median 129 ms, p95 140 ms"
     }
   ],
   "example_output": {
     "model": {
       "name": "M3-B-mono-nozip",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "policy_version": "1.1.0"
     },
     "application_month": "Oct-2026",
     "probability_of_default": 0.1008,
     "risk_band": "R3",
     "risk_band_label": "moderate risk",
-    "decision": "APPROVE",
-    "decision_rule": "PD <= 22.5%",
+    "decision": "REVIEW",
+    "decision_rule": "guardrail: insufficient credit-bureau data",
+    "model_decision": "APPROVE",
+    "guardrail_notes": [
+      "Only 8% of credit-bureau fields were provided: the PD relies on typical values, so the application goes to manual review instead of automatic approval"
+    ],
+    "bureau_data_coverage": 0.078,
     "loan_amount": 12000.0,
     "term_months": 36,
     "expected_loss_usd": 614.4,
@@ -157,7 +169,7 @@
     "warnings": [
       "47 model input(s) not provided; the training medians / 'missing' encodings were used (see missing_fields)"
     ],
-    "latency_ms": 93.8
+    "latency_ms": 111.4
   },
   "fico_sweep": [
     0.1343,
@@ -189,5 +201,5 @@
     0.1912,
     0.1912
   ],
-  "latency_ms_median": 124.29414998041466
+  "latency_ms_median": 129.25554998219013
 }

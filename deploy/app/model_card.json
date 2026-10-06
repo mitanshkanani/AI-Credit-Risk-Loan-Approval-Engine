@@ -72,7 +72,17 @@
   },
   "required_fields": [
     "loan_amnt",
-    "term"
+    "term",
+    "annual_inc",
+    "dti",
+    "fico_range_low",
+    "earliest_cr_line",
+    "home_ownership",
+    "verification_status",
+    "purpose",
+    "addr_state",
+    "revol_util",
+    "inq_last_6mths"
   ],
   "input_fields": [
     "loan_amnt",
@@ -143,7 +153,23 @@
   ],
   "known_limitations": [
     "60-month loans are under-predicted by about 2.5 percentage points on the test set",
-    "trained only on loans LendingClub approved; applicants it rejected were never seen",
+    "trained only on loans LendingClub approved (FICO >= 660, DTI < 40%): applicants outside that range are REFERred, not scored",
+    "monotonic constraints cover FICO, DTI, income, term, inquiries and utilisation only; delinquency, public-record and credit-age effects were learned from approved loans and can be weak or counter-intuitive",
+    "job title and state are inputs: they can act as proxies (zip code was removed for this reason)",
     "educational demo, not a lending decision"
-  ]
+  ],
+  "policy_version": "1.1.0",
+  "guardrails": {
+    "refer_if_outside": {
+      "fico_range_low": "660-850",
+      "dti": "0-40",
+      "loan_amnt": "1,000-35,000",
+      "annual_inc": ">= 3,000",
+      "revol_util": "<= 150",
+      "inq_last_6mths": "<= 8",
+      "credit_history": ">= 36 months"
+    },
+    "no_auto_approve_if_bureau_coverage_below": 0.5,
+    "test_loans_affected": "74 of 212,801 (0.03%); ROC-AUC unchanged 0.746"
+  }
 }
