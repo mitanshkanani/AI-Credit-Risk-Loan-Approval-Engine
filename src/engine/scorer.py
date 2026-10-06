@@ -82,6 +82,26 @@ class CreditRiskEngine:
         self.model_fields = self.manifest["model_input_fields"]
         if self.booster.num_feature() != len(self.features):
             raise RuntimeError("model and manifest disagree on the number of features")
+        self._cache_target_encoder()
+
+    def _cache_target_encoder(self):
+        """Speed-up only: look target encodings up in dictionaries built once.
+
+        scikit-learn's TargetEncoder.transform rebuilds its category lookup (143,539 job titles) on every
+        call, ~0.3 s per application. The fitted values are copied into plain dicts here; unknown
+        categories get the training prior, exactly as scikit-learn does. The fresh-session test checks
+        the result is identical to the scikit-learn path.
+        """
+        te = self.preprocessor.named_steps["encode"].named_transformers_["te"].named_steps["encode"]
+        lookups = [dict(zip(cats.tolist(), enc.tolist())) for cats, enc in zip(te.categories_, te.encodings_)]
+        prior = float(te.target_mean_)
+
+        def fast_transform(X):
+            values = np.asarray(X, dtype=object)
+            return np.column_stack([[lookup.get(v, prior) for v in values[:, j]] for j, lookup in enumerate(lookups)]).astype(np.float64)
+
+        self._sklearn_te_transform = te.transform
+        te.transform = fast_transform
 
     # ------------------------------------------------------------------ input handling
     def _prepare(self, application):

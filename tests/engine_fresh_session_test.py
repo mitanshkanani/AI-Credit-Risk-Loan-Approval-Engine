@@ -99,6 +99,21 @@ def main():
           f"max |PD diff| {pd_diff:.1e}, max |EL diff| ${el_diff:.1e}, bands equal {same_band}, decisions equal {same_decision}; "
           f"decisions: {scored['decision'].value_counts().to_dict()}")
 
+    # 2b. cached target-encoder lookup == scikit-learn's own transform
+    te = engine.preprocessor.named_steps["encode"].named_transformers_["te"].named_steps["encode"]
+    fast_X = engine.transform(raw[engine.raw_fields].reset_index(drop=True))
+    fast_fn, te.transform = te.transform, engine._sklearn_te_transform
+    sklearn_X = engine.transform(raw[engine.raw_fields].reset_index(drop=True))
+    te.transform = fast_fn
+    unseen = {"emp_title": "zz never seen job", "title": None, "zip_code": "000xx"}
+    fast_new = engine.transform([{**SPARSE_APPLICATION, **unseen, "issue_d": "Oct-2026"}])
+    te.transform = engine._sklearn_te_transform
+    sklearn_new = engine.transform([{**SPARSE_APPLICATION, **unseen, "issue_d": "Oct-2026"}])
+    te.transform = fast_fn
+    same = fast_X.equals(sklearn_X) and fast_new.equals(sklearn_new)
+    check("cached target-encoder lookup is identical to scikit-learn (2,000 loans + unseen categories)", same,
+          f"max |diff| {float(np.abs(fast_X.to_numpy() - sklearn_X.to_numpy()).max()):.1e}")
+
     # 3. single == batch
     singles = [engine.score(raw.iloc[i][engine.raw_fields].to_dict()) for i in range(20)]
     single_vs_batch = max(abs(s["probability_of_default"] - scored["pd"].iloc[i]) for i, s in enumerate(singles))

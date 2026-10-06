@@ -20,6 +20,12 @@
       "detail": "max |PD diff| 0.0e+00, max |EL diff| $0.0e+00, bands equal True, decisions equal True; decisions: {'APPROVE': 1262, 'DECLINE': 538, 'REVIEW': 200}"
     },
     {
+      "check": "cached target-encoder lookup is identical to scikit-learn (2,000 loans + unseen categories)",
+      "status": "PASS",
+      "required": true,
+      "detail": "max |diff| 0.0e+00"
+    },
+    {
       "check": "single-application scoring agrees with batch scoring (20 loans)",
       "status": "PASS",
       "required": true,
@@ -51,9 +57,9 @@
     },
     {
       "check": "one application scored in under 200 ms (median of 50)",
-      "status": "WARNING",
+      "status": "PASS",
       "required": false,
-      "detail": "median 384 ms, p95 404 ms"
+      "detail": "median 124 ms, p95 138 ms"
     }
   ],
   "example_output": {
@@ -151,7 +157,7 @@
     "warnings": [
       "47 model input(s) not provided; the training medians / 'missing' encodings were used (see missing_fields)"
     ],
-    "latency_ms": 407.9
+    "latency_ms": 93.8
   },
   "fico_sweep": [
     0.1343,
@@ -183,5 +189,5 @@
     0.1912,
     0.1912
   ],
-  "latency_ms_median": 384.30595002137125
+  "latency_ms_median": 124.29414998041466
 }
