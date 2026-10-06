@@ -1,0 +1,9 @@
+step,ms
+preprocessor: engineer,98.19959997548722
+preprocessor: filter,2.673199982382357
+preprocessor: encode,308.0693500232883
+preprocessor: dedupe,0.5361999792512506
+"LightGBM PD (1,931 trees)",1.0632500052452087
+SHAP values (pred_contrib),10.835799999767914
+calibration + policy + reasons,1.4746499946340919
+TOTAL engine.score(),380.08370000170544

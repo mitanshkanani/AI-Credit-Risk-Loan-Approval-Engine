@@ -1,0 +1,8 @@
+# Exact versions the scoring engine was built and tested with (Python 3.14.6).
+# scikit-learn MUST match the version that fitted preprocessor_v2.joblib; the engine checks it.
+scikit-learn==1.9.0
+lightgbm==4.7.0
+numpy==2.5.2
+pandas==2.3.3
+scipy==1.18.0
+joblib==1.5.3

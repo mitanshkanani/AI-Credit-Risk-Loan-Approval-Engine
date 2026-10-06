@@ -148,6 +148,24 @@ Modeling progress (models/)
   Everything in results/decision_policy.json, applied by
   src/modeling/decision.py (calibrate, risk_band, decide, expected_loss,
   apply_policy) - reuse it in Stages 4-6.
+- Final Stage 4 (scoring package): DONE LOCALLY (2026-10-06), PDF sent;
+  COMMITTED after user OK. Folder models/final/04_scoring_package/.
+  ENGINE: src/engine/scorer.py -> CreditRiskEngine().score(dict) -> JSON
+  (PD, risk band, decision, expected loss, reasons, missing_fields, warnings);
+  score_batch(rows) for many. Reads ONLY bundle/ (preprocessor_v2.joblib,
+  final_model.txt, calibrator.json, decision_policy.json, manifest.json with
+  SHA-256 checksums). Bundle is COMMITTED (gitignore exceptions, ~10 MB);
+  rebuild with build_bundle.py. Engine refuses to start unless
+  scikit-learn == 1.9.0 (version that fitted the preprocessor) -> run it with the
+  default Python 3.14, NOT Anaconda (1.7.2). Pins: requirements-engine.txt.
+  Notebook F4 was executed with nbclient in Python 3.14 (kernel "python3").
+  Test: python tests/engine_fresh_session_test.py (raw CSV rows of 2,000
+  VALIDATION loans reproduce Stage 3 exactly; 8/8 required checks PASS).
+  Latency ~0.4 s/application (sklearn TargetEncoder rebuilds the lookup of
+  143,539 job titles every call) - fine for the demo.
+  Only loan_amnt and term are required; 65 raw fields used, 37 ignored.
+  For Stage 6: start the form from complete real profiles (blank bureau
+  fields get training medians and can shift PD noticeably).
 - Planned Stage 6 (user asked): FastAPI scoring service + small web front end,
   deployed together at one public link for the resume (e.g. one Docker app on
   Hugging Face Spaces). Do it after Stages 3-5.

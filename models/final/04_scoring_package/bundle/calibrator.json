@@ -1,0 +1,8 @@
+{
+  "method": "platt",
+  "formula": "PD_cal = 1 / (1 + exp(-(a * logit(PD_raw) + b)))",
+  "a": 1.038597301703913,
+  "b": 0.168464206651339,
+  "fitted_on": "validation split (2015 H1)",
+  "model": "M3-B-mono-nozip"
+}

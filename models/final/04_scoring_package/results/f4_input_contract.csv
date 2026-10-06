@@ -1,0 +1,5 @@
+group,fields,examples
+loan,4,"loan_amnt, term, purpose, title"
+applicant,7,"annual_inc, dti, emp_title, emp_length, home_ownership, verification_status, addr_state"
+credit score / history,8,"fico_range_low, earliest_cr_line, inq_last_6mths, mths_since_recent_inq, delinq_2yrs, pub_rec, pub_rec_bankruptcies, mths_since_last_delinq"
+other credit-bureau fields,46,"mths_since_last_record, open_acc, revol_bal, revol_util, total_acc, collections_12_mths_ex_med, mths_since_last_major_derog, acc_now_delinq ..."

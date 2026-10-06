@@ -1,0 +1,59 @@
+[
+  {
+    "probability_of_default": 0.0733,
+    "risk_band": "R2",
+    "decision": "APPROVE",
+    "loan_amount": 14400.0,
+    "term_months": 36,
+    "expected_loss_usd": 535.65,
+    "reasons": [
+      "Age of oldest revolving account: 57 months",
+      "Debt-to-income ratio: 23.2%",
+      "Months since newest revolving account: 23 months",
+      "Total balance excluding mortgage: $109,149"
+    ],
+    "strengths": [
+      "Loan term: 36 months",
+      "Length of credit history: 4.8 years"
+    ],
+    "actual_outcome": "repaid"
+  },
+  {
+    "probability_of_default": 0.2746,
+    "risk_band": "R5",
+    "decision": "REVIEW",
+    "loan_amount": 24900.0,
+    "term_months": 60,
+    "expected_loss_usd": 4284.43,
+    "reasons": [
+      "Loan term: 60 months",
+      "Loan amount: $24,900",
+      "Accounts opened in the last 24 months: 8",
+      "Age of oldest revolving account: 89 months"
+    ],
+    "strengths": [
+      "Annual income: $130,000",
+      "Credit score (FICO): 710"
+    ],
+    "actual_outcome": "repaid"
+  },
+  {
+    "probability_of_default": 0.3018,
+    "risk_band": "R6",
+    "decision": "DECLINE",
+    "loan_amount": 20000.0,
+    "term_months": 60,
+    "expected_loss_usd": 3781.88,
+    "reasons": [
+      "Loan term: 60 months",
+      "Accounts opened in the last 24 months: 10",
+      "Loan amount: $20,000",
+      "Months since newest bankcard: 2 months"
+    ],
+    "strengths": [
+      "Total credit lines ever: 55",
+      "Debt-to-income ratio: 13.4%"
+    ],
+    "actual_outcome": "repaid"
+  }
+]

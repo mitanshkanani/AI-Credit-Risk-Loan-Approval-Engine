@@ -28,3 +28,8 @@ final_preprocessed_data_v2/
 models/**/results/*.txt
 models/**/results/*.json.model
 models/**/results/*.ubj
+
+# Scoring bundle (small; committed so the live demo can be deployed from GitHub)
+!models/final/04_scoring_package/bundle/
+!models/final/04_scoring_package/bundle/*.joblib
+!models/final/04_scoring_package/bundle/*.txt

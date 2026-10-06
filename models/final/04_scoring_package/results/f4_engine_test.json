@@ -1,0 +1,187 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "engine loads in a fresh process; all bundle checksums match",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 files, 0.2 s, scikit-learn 1.9.0"
+    },
+    {
+      "check": "a tampered bundle file is refused",
+      "status": "PASS",
+      "required": true,
+      "detail": "bundle file calibrator.json does not match its checksum in manifest.json"
+    },
+    {
+      "check": "raw CSV rows of 2,000 validation loans reproduce Stage 3 exactly",
+      "status": "PASS",
+      "required": true,
+      "detail": "max |PD diff| 0.0e+00, max |EL diff| $0.0e+00, bands equal True, decisions equal True; decisions: {'APPROVE': 1262, 'DECLINE': 538, 'REVIEW': 200}"
+    },
+    {
+      "check": "single-application scoring agrees with batch scoring (20 loans)",
+      "status": "PASS",
+      "required": true,
+      "detail": "max |diff| 5.0e-05 (PD is rounded to 4 decimals in the JSON); decisions equal True"
+    },
+    {
+      "check": "sparse hand-written application -> complete JSON, no NaN",
+      "status": "PASS",
+      "required": true,
+      "detail": "PD 0.1008, R3, APPROVE, EL $614.4, 47 missing fields listed"
+    },
+    {
+      "check": "impossible inputs are rejected with a message",
+      "status": "PASS",
+      "required": true,
+      "detail": "loan amount missing: loan_amnt (loan amount in USD) is required and must be a number; term of 48 months: term is required and must be 36 or 60 (months); FICO of 900: fico_range_low must be between 300 and 850; negative income: annual_inc cannot be negative; bad credit-line date: earliest_cr_line must look like 'Mar-2010'; not a dict: an application must be a JSON object / dict"
+    },
+    {
+      "check": "same input -> same output",
+      "status": "PASS",
+      "required": true,
+      "detail": ""
+    },
+    {
+      "check": "higher FICO never raises PD; higher DTI never lowers it",
+      "status": "PASS",
+      "required": true,
+      "detail": "FICO 640->850: PD 0.134->0.048; DTI 0->40: PD 0.076->0.191"
+    },
+    {
+      "check": "one application scored in under 200 ms (median of 50)",
+      "status": "WARNING",
+      "required": false,
+      "detail": "median 384 ms, p95 404 ms"
+    }
+  ],
+  "example_output": {
+    "model": {
+      "name": "M3-B-mono-nozip",
+      "version": "1.0.0"
+    },
+    "application_month": "Oct-2026",
+    "probability_of_default": 0.1008,
+    "risk_band": "R3",
+    "risk_band_label": "moderate risk",
+    "decision": "APPROVE",
+    "decision_rule": "PD <= 22.5%",
+    "loan_amount": 12000.0,
+    "term_months": 36,
+    "expected_loss_usd": 614.4,
+    "expected_loss_rate": 0.0512,
+    "reasons": [
+      {
+        "reason": "Home ownership: RENT",
+        "impact": 0.1199
+      },
+      {
+        "reason": "Average balance per account: not reported",
+        "impact": 0.0485
+      },
+      {
+        "reason": "Length of credit history: 16.6 years",
+        "impact": 0.0409
+      },
+      {
+        "reason": "Installment accounts: 6",
+        "impact": 0.0369
+      }
+    ],
+    "strengths": [
+      {
+        "reason": "Loan term: 36 months",
+        "impact": -0.2489
+      },
+      {
+        "reason": "Annual income: $72,000",
+        "impact": -0.109
+      }
+    ],
+    "missing_fields": [
+      "delinq_2yrs",
+      "mths_since_last_delinq",
+      "mths_since_last_record",
+      "pub_rec",
+      "collections_12_mths_ex_med",
+      "mths_since_last_major_derog",
+      "acc_now_delinq",
+      "tot_coll_amt",
+      "tot_cur_bal",
+      "total_rev_hi_lim",
+      "acc_open_past_24mths",
+      "avg_cur_bal",
+      "bc_open_to_buy",
+      "bc_util",
+      "chargeoff_within_12_mths",
+      "delinq_amnt",
+      "mo_sin_old_il_acct",
+      "mo_sin_old_rev_tl_op",
+      "mo_sin_rcnt_rev_tl_op",
+      "mo_sin_rcnt_tl",
+      "mort_acc",
+      "mths_since_recent_bc",
+      "mths_since_recent_bc_dlq",
+      "mths_since_recent_inq",
+      "mths_since_recent_revol_delinq",
+      "num_accts_ever_120_pd",
+      "num_actv_bc_tl",
+      "num_actv_rev_tl",
+      "num_bc_sats",
+      "num_bc_tl",
+      "num_il_tl",
+      "num_op_rev_tl",
+      "num_rev_accts",
+      "num_rev_tl_bal_gt_0",
+      "num_sats",
+      "num_tl_120dpd_2m",
+      "num_tl_30dpd",
+      "num_tl_90g_dpd_24m",
+      "num_tl_op_past_12m",
+      "pct_tl_nvr_dlq",
+      "percent_bc_gt_75",
+      "pub_rec_bankruptcies",
+      "tax_liens",
+      "tot_hi_cred_lim",
+      "total_bal_ex_mort",
+      "total_bc_limit",
+      "total_il_high_credit_limit"
+    ],
+    "warnings": [
+      "47 model input(s) not provided; the training medians / 'missing' encodings were used (see missing_fields)"
+    ],
+    "latency_ms": 407.9
+  },
+  "fico_sweep": [
+    0.1343,
+    0.1343,
+    0.1257,
+    0.1138,
+    0.1008,
+    0.0858,
+    0.0735,
+    0.0635,
+    0.0552,
+    0.0522,
+    0.0475,
+    0.0475,
+    0.0475,
+    0.0475,
+    0.0475
+  ],
+  "dti_sweep": [
+    0.0758,
+    0.0758,
+    0.0786,
+    0.0872,
+    0.0955,
+    0.1049,
+    0.1186,
+    0.1344,
+    0.1377,
+    0.1912,
+    0.1912
+  ],
+  "latency_ms_median": 384.30595002137125
+}
