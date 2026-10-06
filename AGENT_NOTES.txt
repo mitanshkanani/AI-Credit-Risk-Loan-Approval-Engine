@@ -166,6 +166,16 @@ Modeling progress (models/)
   Only loan_amnt and term are required; 65 raw fields used, 37 ignored.
   For Stage 6: start the form from complete real profiles (blank bureau
   fields get training medians and can shift PD noticeably).
+- Final Stage 5 (FINAL TEST): DONE (2026-10-06). TEST SPLIT HAS NOW BEEN OPENED
+  ONCE - never use it again for any choice. Plan with pre-registered criteria
+  committed first (8c5b9ab). Results COMMITTED after user OK.
+  Test 2015 H2: ROC-AUC 0.7465 (val 0.7351), Brier 0.1388, mean PD 19.63% vs
+  20.06% actual; LendingClub int_rate ROC-AUC 0.7148 (val 0.7037).
+  7/8 criteria met; MISS: 60-month gap -2.51 pts (documented, NOT fixed;
+  v1.1 idea = term-specific calibrator on newer data). APPROVE 66.8% (11.6%
+  default), EL/real 0.886. Raw CSV -> engine on 5,000 test loans: diff 0.0.
+  Stress 2016/17/18 ROC-AUC 0.719/0.711/0.704. Leaderboard has a test row.
+  Engine v1.0.0 is FINAL - do not change model/calibrator/policy.
 - Planned Stage 6 (user asked): FastAPI scoring service + small web front end,
   deployed together at one public link for the resume (e.g. one Docker app on
   Hugging Face Spaces). Do it after Stages 3-5.

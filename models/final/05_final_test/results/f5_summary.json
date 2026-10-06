@@ -1,0 +1,26 @@
+{
+  "engine": "M3-B-mono-nozip v1.0.0",
+  "model_sha256": "2ce268265c9ca8b1da034f2e497980898b4280d4dda1ddd4548e40f0b635ce01",
+  "test_rows": 212801,
+  "metrics": {
+    "rows": 212801.0,
+    "defaults": 42684.0,
+    "default_rate": 0.20058176418343898,
+    "mean_pd": 0.19632899996793438,
+    "calibration_gap": -0.004252764215504606,
+    "roc_auc": 0.746488284438561,
+    "pr_auc": 0.43359235930162415,
+    "ks": 0.35971127090481425,
+    "brier": 0.13881326320803447,
+    "log_loss": 0.4360728122384895,
+    "accuracy_at_threshold": 0.8086475157541553,
+    "default_recall_at_threshold": 0.13243838440633493,
+    "threshold": 0.5
+  },
+  "ece": 0.005921077567293457,
+  "lendingclub_int_rate_roc_auc": 0.7147812396262868,
+  "expected_over_realised_loss": 0.8859189615665337,
+  "end_to_end_max_pd_diff": 0.0,
+  "criteria_met": 7,
+  "criteria_total": 8
+}

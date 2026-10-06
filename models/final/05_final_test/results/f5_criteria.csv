@@ -1,0 +1,9 @@
+criterion,value,pass,result
+ROC-AUC drop vs validation <= 0.02,-0.0114,True,PASS
+calibration gap within +-2 pts,-0.43 pts,True,PASS
+36-month gap within +-2 pts,+0.22 pts,True,PASS
+60-month gap within +-2 pts,-2.51 pts,False,MISS
+risk bands: default rate rises band to band,3.0% < 7.4% < 12.6% < 17.7% < 24.9% < 35.5% < 52.9%,True,PASS
+approved book default rate <= 13%,11.60%,True,PASS
+expected / realised loss in 0.85-1.15,0.886,True,PASS
+"raw CSV -> engine matches (5,000 loans)",0.0e+00,True,PASS
