@@ -1,0 +1,11 @@
+# Same versions the engine was built and tested with (models/final/04_scoring_package/requirements-engine.txt)
+scikit-learn==1.9.0
+lightgbm==4.7.0
+numpy==2.5.2
+pandas==2.3.3
+scipy==1.18.0
+joblib==1.5.3
+# web service
+fastapi==0.141.1
+uvicorn==0.52.4
+pydantic==2.13.4

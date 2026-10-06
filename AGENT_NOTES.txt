@@ -176,7 +176,18 @@ Modeling progress (models/)
   default), EL/real 0.886. Raw CSV -> engine on 5,000 test loans: diff 0.0.
   Stress 2016/17/18 ROC-AUC 0.719/0.711/0.704. Leaderboard has a test row.
   Engine v1.0.0 is FINAL - do not change model/calibrator/policy.
-- Planned Stage 6 (user asked): FastAPI scoring service + small web front end,
+- Stage 6 (live demo): CODE DONE + tested locally (2026-10-06). Folder deploy/:
+  app/main.py (FastAPI: /, /api/health, /api/model, /api/samples, /api/score,
+  /docs), app/static/index.html (single page, light/dark, mobile),
+  app/samples.json + model_card.json (built by deploy/build_samples.py from 6
+  real VALIDATION applicants), Dockerfile (python:3.14-slim + libgomp1, port
+  7860), requirements.txt (pinned), SPACE_README.md (HF YAML header).
+  deploy/build_space.py assembles deploy/space/ (gitignored, 23 files, 10 MB),
+  smoke-tests it in a fresh process, and with --upload HF_USER pushes to
+  huggingface.co/spaces/HF_USER/credit-risk-engine (needs `hf auth login`
+  with a WRITE token). Tests: python tests/test_api.py (5 pass).
+  Run locally: python -m uvicorn deploy.app.main:app --port 7860
+- Original Stage 6 plan (user asked): FastAPI scoring service + small web front end,
   deployed together at one public link for the resume (e.g. one Docker app on
   Hugging Face Spaces). Do it after Stages 3-5.
 - The TEST split is sealed: load_split("test") raises unless allow_test=True.

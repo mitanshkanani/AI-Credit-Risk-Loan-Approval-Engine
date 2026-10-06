@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credit Risk Engine</title>
+<meta name="description" content="Loan approval engine: probability of default, risk band, decision, expected loss and reasons.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232f5fd0%27/%3E%3Cpath d=%27M8 21l5-5 4 3 7-8%27 stroke=%27white%27 stroke-width=%273%27 fill=%27none%27 stroke-linecap=%27round%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f6f7f9; --panel: #ffffff; --ink: #18202b; --muted: #637083; --line: #e3e7ed; --soft: #f1f4f8;
+  --accent: #2f5fd0; --accent-ink: #ffffff;
+  --approve: #1f8a4c; --approve-bg: #e7f5ec; --review: #b7791f; --review-bg: #fdf3e2; --decline: #c2412d; --decline-bg: #fbeae7;
+  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 4px 16px rgba(16,24,40,.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1319; --panel: #171c24; --ink: #e7ebf1; --muted: #93a0b2; --line: #2a313c; --soft: #1e242e;
+    --accent: #6d95ff; --accent-ink: #0f1319;
+    --approve: #4cc782; --approve-bg: #15291e; --review: #e6ad4f; --review-bg: #2d2416; --decline: #f07a66; --decline-bg: #2f1a17;
+    --shadow: none;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1319; --panel: #171c24; --ink: #e7ebf1; --muted: #93a0b2; --line: #2a313c; --soft: #1e242e;
+  --accent: #6d95ff; --accent-ink: #0f1319;
+  --approve: #4cc782; --approve-bg: #15291e; --review: #e6ad4f; --review-bg: #2d2416; --decline: #f07a66; --decline-bg: #2f1a17;
+  --shadow: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 Inter, system-ui, sans-serif; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 16px 40px; }
+header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+h1 { font-size: 26px; margin: 0; letter-spacing: -.02em; }
+.tagline { color: var(--muted); margin: 4px 0 0; max-width: 720px; }
+.links { display: flex; gap: 14px; font-size: 14px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow); }
+.stat b { display: block; font-size: 20px; letter-spacing: -.01em; }
+.stat span { color: var(--muted); font-size: 12.5px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); }
+h2 { font-size: 15px; margin: 0 0 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.samples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 18px; }
+.sample { text-align: left; border: 1px solid var(--line); background: var(--soft); color: var(--ink); border-radius: 10px; padding: 8px 10px; cursor: pointer; font: inherit; font-size: 12.5px; line-height: 1.35; }
+.sample:hover { border-color: var(--accent); }
+.sample.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+.sample small { display: block; color: var(--muted); margin-top: 2px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+fieldset { border: 0; padding: 0; margin: 0 0 14px; }
+legend { font-weight: 600; font-size: 13px; margin-bottom: 8px; padding: 0; }
+.fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 12px; }
+label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--muted); }
+input, select { font: inherit; font-size: 14px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; width: 100%; }
+input:focus, select:focus { outline: 2px solid color-mix(in srgb, var(--accent) 40%, transparent); border-color: var(--accent); }
+.bureau { display: flex; flex-direction: row; gap: 10px; align-items: flex-start; background: var(--soft); border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--muted); margin: 4px 0 16px; }
+.bureau input { width: auto; margin-top: 3px; }
+.actions { display: flex; gap: 10px; align-items: center; }
+button.primary { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 11px 20px; font: inherit; font-weight: 600; cursor: pointer; }
+button.primary:disabled { opacity: .6; cursor: wait; }
+button.ghost { background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 10px; padding: 10px 14px; font: inherit; cursor: pointer; }
+.error { color: var(--decline); font-size: 13.5px; margin-top: 10px; min-height: 1em; }
+.empty { color: var(--muted); text-align: center; padding: 60px 10px; }
+.decision { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 12px; padding: 16px 18px; margin-bottom: 16px; }
+.decision .label { font-size: 13px; opacity: .85; }
+.decision .value { font-size: 28px; font-weight: 700; letter-spacing: .02em; }
+.decision.APPROVE { background: var(--approve-bg); color: var(--approve); }
+.decision.REVIEW { background: var(--review-bg); color: var(--review); }
+.decision.DECLINE { background: var(--decline-bg); color: var(--decline); }
+.decision .rule { font-family: "JetBrains Mono", monospace; font-size: 12.5px; text-align: right; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.kpi { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.kpi b { display: block; font-size: 20px; }
+.kpi span { color: var(--muted); font-size: 12px; }
+.meter { position: relative; height: 12px; border-radius: 6px; margin: 6px 0 22px;
+  background: linear-gradient(90deg, var(--approve) 0 22.5%, var(--review) 22.5% 27.5%, var(--decline) 27.5% 100%); opacity: .9; }
+.meter .needle { position: absolute; top: -5px; width: 3px; height: 22px; background: var(--ink); border-radius: 2px; transform: translateX(-1px); transition: left .4s; }
+.meter .tick { position: absolute; top: 15px; font-size: 11px; color: var(--muted); transform: translateX(-50%); }
+.reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.reasons h3 { font-size: 13px; margin: 0 0 6px; }
+.reasons ul { list-style: none; margin: 0; padding: 0; }
+.reasons li { display: flex; gap: 8px; align-items: baseline; font-size: 13.5px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+.reasons li:last-child { border-bottom: 0; }
+.up { color: var(--decline); } .down { color: var(--approve); }
+.note { font-size: 12.5px; color: var(--muted); margin-top: 14px; }
+.outcome { font-size: 12.5px; background: var(--soft); border-radius: 8px; padding: 8px 10px; margin-top: 12px; }
+details { margin-top: 14px; font-size: 13px; }
+summary { cursor: pointer; color: var(--muted); }
+pre { font-family: "JetBrains Mono", monospace; font-size: 12px; background: var(--soft); padding: 12px; border-radius: 8px; overflow-x: auto; max-height: 340px; }
+footer { color: var(--muted); font-size: 12.5px; margin-top: 24px; line-height: 1.6; }
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .fields, .samples { grid-template-columns: repeat(2, 1fr); }
+  .reasons, .kpis { grid-template-columns: 1fr; }
+  .decision .value { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>AI Credit Risk &amp; Loan Approval Engine</h1>
+      <p class="tagline">Gradient-boosted model trained on 388k LendingClub loans. Enter an application to get its probability of default, risk band, decision, expected loss and the reasons behind it.</p>
+    </div>
+    <nav class="links">
+      <a href="/docs" target="_blank" rel="noopener">API docs</a>
+      <a href="https://github.com/mitanshkanani/AI-Credit-Risk-Loan-Approval-Engine" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="stats" id="stats" aria-label="Model performance on the sealed test set"></section>
+
+  <div class="grid">
+    <form class="panel" id="form" novalidate>
+      <h2>1 · Start from a real applicant</h2>
+      <div class="samples" id="samples"></div>
+
+      <h2>2 · Edit the application</h2>
+      <fieldset><legend>Loan</legend><div class="fields">
+        <label>Amount (USD)<input name="loan_amnt" type="number" min="500" max="40000" step="25" required></label>
+        <label>Term<select name="term"><option value="36">36 months</option><option value="60">60 months</option></select></label>
+        <label>Purpose<select name="purpose">
+          <option value="debt_consolidation">Debt consolidation</option><option value="credit_card">Credit card</option>
+          <option value="home_improvement">Home improvement</option><option value="major_purchase">Major purchase</option>
+          <option value="small_business">Small business</option><option value="car">Car</option><option value="medical">Medical</option>
+          <option value="moving">Moving</option><option value="vacation">Vacation</option><option value="house">House</option>
+          <option value="wedding">Wedding</option><option value="other">Other</option></select></label>
+      </div></fieldset>
+      <fieldset><legend>Applicant</legend><div class="fields">
+        <label>Annual income (USD)<input name="annual_inc" type="number" min="0" step="500"></label>
+        <label>Debt-to-income (%)<input name="dti" type="number" min="0" max="100" step="0.1"></label>
+        <label>Employment length<select name="emp_length">
+          <option value="">not given</option><option>&lt; 1 year</option><option>1 year</option><option>2 years</option><option>3 years</option>
+          <option>4 years</option><option>5 years</option><option>6 years</option><option>7 years</option><option>8 years</option>
+          <option>9 years</option><option>10+ years</option></select></label>
+        <label>Job title<input name="emp_title" type="text" maxlength="60"></label>
+        <label>Home ownership<select name="home_ownership"><option>RENT</option><option>MORTGAGE</option><option>OWN</option></select></label>
+        <label>Income verification<select name="verification_status"><option>Verified</option><option>Source Verified</option><option>Not Verified</option></select></label>
+        <label>State<input name="addr_state" type="text" maxlength="2" pattern="[A-Za-z]{2}"></label>
+      </div></fieldset>
+      <fieldset><legend>Credit profile</legend><div class="fields">
+        <label>FICO score<input name="fico_range_low" type="number" min="300" max="850" step="1"></label>
+        <label>First credit line (Mon-YYYY)<input name="earliest_cr_line" type="text" placeholder="Mar-2010"></label>
+        <label>Revolving utilisation (%)<input name="revol_util" type="number" min="0" max="150" step="0.1"></label>
+        <label>Revolving balance (USD)<input name="revol_bal" type="number" min="0" step="100"></label>
+        <label>Open credit lines<input name="open_acc" type="number" min="0" step="1"></label>
+        <label>Total credit lines<input name="total_acc" type="number" min="0" step="1"></label>
+        <label>Inquiries, last 6 months<input name="inq_last_6mths" type="number" min="0" step="1"></label>
+        <label>Delinquencies, last 2 years<input name="delinq_2yrs" type="number" min="0" step="1"></label>
+        <label>Public records<input name="pub_rec" type="number" min="0" step="1"></label>
+      </div></fieldset>
+      <label class="bureau"><input type="checkbox" id="useBureau" checked>
+        <span>Keep the sample's other <b id="bureauCount">0</b> credit-bureau fields (account counts, balances, limits…). Untick to leave them blank; the engine then uses typical training values and lists them as missing.</span></label>
+      <div class="actions">
+        <button class="primary" id="submit" type="submit">Score application</button>
+        <button class="ghost" id="reset" type="button">Reset to sample</button>
+      </div>
+      <div class="error" id="error" role="alert"></div>
+    </form>
+
+    <section class="panel" id="result" aria-live="polite">
+      <h2>3 · Result</h2>
+      <div class="empty">Pick a sample or fill in the form, then score it.</div>
+    </section>
+  </div>
+
+  <footer>
+    <b>How it works:</b> raw application → fitted preprocessing (imputation, one-hot, target encoding) → LightGBM with monotonic constraints (146 features) →
+    Platt calibration → decision policy (approve if PD ≤ <span id="tA">22.5%</span>, decline if PD ≥ <span id="tD">27.5%</span>) → expected loss = PD × amount × exposure × loss-given-default → SHAP reason codes.
+    The model never sees LendingClub's grade or interest rate. <br>
+    <b>Limitations:</b> <span id="limits"></span> <br>
+    Educational project. Not a real credit decision.
+  </footer>
+</div>
+
+<script>
+const FORM_FIELDS = ["loan_amnt","term","purpose","annual_inc","dti","emp_length","emp_title","home_ownership","verification_status",
+  "addr_state","fico_range_low","earliest_cr_line","revol_util","revol_bal","open_acc","total_acc","inq_last_6mths","delinq_2yrs","pub_rec"];
+const NUMERIC = new Set(["loan_amnt","annual_inc","dti","fico_range_low","revol_util","revol_bal","open_acc","total_acc","inq_last_6mths","delinq_2yrs","pub_rec"]);
+const COLORS = {APPROVE: "var(--approve)", REVIEW: "var(--review)", DECLINE: "var(--decline)"};
+const form = document.getElementById("form"), resultBox = document.getElementById("result"), errorBox = document.getElementById("error");
+let samples = [], current = null, card = null, edited = false;
+const pct = x => (x * 100).toFixed(1) + "%";
+const usd = x => "$" + Math.round(x).toLocaleString("en-US");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function fillForm(app) {
+  for (const name of FORM_FIELDS) {
+    const el = form.elements[name];
+    let v = app[name];
+    if (name === "term") v = String(v ?? "36").match(/\d+/)?.[0] ?? "36";
+    el.value = v === null || v === undefined ? "" : v;
+  }
+  const extra = Object.keys(app).filter(k => !FORM_FIELDS.includes(k) && k !== "issue_d" && app[k] !== null).length;
+  document.getElementById("bureauCount").textContent = extra;
+}
+
+function selectSample(i) {
+  current = samples[i];
+  document.querySelectorAll(".sample").forEach((b, j) => b.classList.toggle("active", i === j));
+  fillForm(current.application);
+  edited = false;
+  score();
+}
+
+function buildApplication() {
+  const app = {};
+  if (current && document.getElementById("useBureau").checked) {
+    for (const [k, v] of Object.entries(current.application)) if (!FORM_FIELDS.includes(k) && k !== "issue_d") app[k] = v;
+  }
+  for (const name of FORM_FIELDS) {
+    const raw = form.elements[name].value.trim();
+    if (raw === "") continue;
+    app[name] = NUMERIC.has(name) ? Number(raw) : raw;
+  }
+  if (app.addr_state) app.addr_state = app.addr_state.toUpperCase();
+  app.term = Number(app.term);
+  return app;
+}
+
+function renderResult(r) {
+  const needle = Math.min(r.probability_of_default, 1) * 100;
+  const list = (items, cls, sym) => items.length ? items.map(x => `<li><span class="${cls}">${sym}</span><span>${esc(x.reason)}</span></li>`).join("")
+                                                 : `<li><span class="note">none</span></li>`;
+  const sameSample = current && !edited;
+  resultBox.innerHTML = `
+    <h2>3 · Result</h2>
+    <div class="decision ${r.decision}">
+      <div><div class="label">Decision</div><div class="value">${r.decision}</div></div>
+      <div class="rule">${esc(r.decision_rule)}<br>${r.risk_band} · ${esc(r.risk_band_label)}</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>${pct(r.probability_of_default)}</b><span>probability of default</span></div>
+      <div class="kpi"><b>${usd(r.expected_loss_usd)}</b><span>expected loss (${pct(r.expected_loss_rate)} of loan)</span></div>
+      <div class="kpi"><b>${r.risk_band}</b><span>risk band (R1 safest – R7)</span></div>
+    </div>
+    <div class="meter" aria-hidden="true"><div class="needle" style="left:${needle}%"></div>
+      <span class="tick" style="left:0">0%</span><span class="tick" style="left:22.5%">22.5</span><span class="tick" style="left:27.5%;transform:translateX(0)">27.5</span><span class="tick" style="left:96%">100%</span></div>
+    <div class="reasons">
+      <div><h3>Main reasons raising the risk</h3><ul>${list(r.reasons, "up", "▲")}</ul></div>
+      <div><h3>Strengths lowering the risk</h3><ul>${list(r.strengths, "down", "▼")}</ul></div>
+    </div>
+    ${r.missing_fields.length ? `<p class="note">${r.missing_fields.length} input(s) were not provided and were filled with typical training values.</p>` : ""}
+    ${sameSample ? `<div class="outcome">This is a real 2015 applicant: in reality the loan was <b>${current.actual_outcome}</b>. A PD is a probability, not a certainty.</div>` : ""}
+    <details><summary>Raw JSON response (${r.latency_ms} ms)</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>`;
+}
+
+async function score(event) {
+  event?.preventDefault();
+  errorBox.textContent = "";
+  const button = document.getElementById("submit");
+  button.disabled = true; button.textContent = "Scoring…";
+  try {
+    const res = await fetch("/api/score", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(buildApplication())});
+    const body = await res.json();
+    if (!res.ok) throw new Error(typeof body.detail === "string" ? body.detail : body.detail.map(d => `${d.loc.at(-1)}: ${d.msg}`).join("; "));
+    renderResult(body);
+  } catch (err) {
+    errorBox.textContent = err.message;
+  } finally {
+    button.disabled = false; button.textContent = "Score application";
+  }
+}
+
+async function init() {
+  [samples, card] = await Promise.all([fetch("/api/samples").then(r => r.json()), fetch("/api/model").then(r => r.json())]);
+  document.getElementById("samples").innerHTML = samples.map((s, i) =>
+    `<button type="button" class="sample" data-i="${i}"><span class="dot" style="background:${COLORS[s.expected_decision]}"></span>${esc(s.name)}<small>${s.application.annual_inc ? usd(s.application.annual_inc) + " income · " : ""}FICO ${s.application.fico_range_low ?? "–"}</small></button>`).join("");
+  document.querySelectorAll(".sample").forEach(b => b.addEventListener("click", () => selectSample(Number(b.dataset.i))));
+  const t = card.test;
+  document.getElementById("stats").innerHTML = [
+    [t.roc_auc.toFixed(3), "ROC-AUC on sealed 2015 test set"],
+    [t.lendingclub_interest_rate_roc_auc.toFixed(3), "LendingClub's own pricing, same loans"],
+    [pct(t.mean_pd) + " / " + pct(t.default_rate), "predicted vs actual default rate"],
+    ["212,801", "test loans, opened once"]].map(([b, s]) => `<div class="stat"><b>${b}</b><span>${s}</span></div>`).join("");
+  document.getElementById("tA").textContent = pct(card.thresholds.approve_max_pd);
+  document.getElementById("tD").textContent = pct(card.thresholds.decline_min_pd);
+  document.getElementById("limits").textContent = card.known_limitations.slice(0, 2).join("; ") + ".";
+  selectSample(0);
+}
+
+form.addEventListener("submit", score);
+form.addEventListener("input", () => { edited = true; });
+document.getElementById("reset").addEventListener("click", () => current && selectSample(samples.indexOf(current)));
+init().catch(err => { errorBox.textContent = "Could not reach the engine: " + err.message; });
+</script>
+</body>
+</html>

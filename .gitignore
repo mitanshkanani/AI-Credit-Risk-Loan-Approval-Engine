@@ -33,3 +33,7 @@ models/**/results/*.ubj
 !models/final/04_scoring_package/bundle/
 !models/final/04_scoring_package/bundle/*.joblib
 !models/final/04_scoring_package/bundle/*.txt
+
+# Assembled Hugging Face Space (built by deploy/build_space.py)
+deploy/space/
+.playwright-mcp/
