@@ -19,7 +19,7 @@ def client():
 
 def test_health_and_page():
     with client() as c:
-        assert c.get("/api/health").json() == {"status": "ok", "model": "M3-B-mono-nozip", "version": "1.0.0"}
+        assert c.get("/api/health").json() == {"status": "ok", "model": "M3-B-mono-nozip", "version": "1.0.0", "policy_version": "1.2.0"}
         page = c.get("/")
         assert page.status_code == 200 and "Credit Risk" in page.text
         assert c.get("/docs").status_code == 200
@@ -44,7 +44,12 @@ def test_minimal_application_needs_core_fields():
 def test_guardrails():
     with client() as c:
         s = c.get("/api/samples").json()[0]["application"]
-        assert c.post("/api/score", json={**s, "fico_range_low": 300}).json()["decision"] == "REFER"
+        refer = c.post("/api/score", json={**s, "fico_range_low": 300}).json()
+        assert refer["decision"] == "REFER" and refer["probability_of_default"] is None
+        assert c.post("/api/score", json={**s, "loan_amnt": 35000, "annual_inc": 3000}).json()["decision"] == "REFER"
+        for bad in ({**s, "annual_inc": "abc"}, {**s, "fico_range_low": ""}, {**s, "fico_range_low": [700]}, {**s, "loan_amnt": True},
+                    {**s, "delinq_2yrs": 2.5}, {**s, "open_acc": 30, "total_acc": 20}):
+            assert c.post("/api/score", json=bad).status_code == 422, bad
         core = {k: s[k] for k in ("loan_amnt", "term", "annual_inc", "dti", "fico_range_low", "earliest_cr_line",
                                   "home_ownership", "verification_status", "purpose", "addr_state", "revol_util", "inq_last_6mths")}
         body = c.post("/api/score", json=core).json()
@@ -54,7 +59,7 @@ def test_guardrails():
 def test_bad_inputs_get_422_with_a_message():
     with client() as c:
         for bad, words in [({"term": 36}, "loan_amnt"), ({"loan_amnt": 5000, "term": 48}, "36 or 60"),
-                           ({"loan_amnt": 5000, "term": 36, "fico_range_low": 950}, "fico"),
+                           ({**c.get("/api/samples").json()[0]["application"], "fico_range_low": 950}, "fico"),
                            ({"loan_amnt": -1, "term": 36}, "loan_amnt"),
                            ({"loan_amnt": 5000, "term": 36}, "required fields")]:
             r = c.post("/api/score", json=bad)

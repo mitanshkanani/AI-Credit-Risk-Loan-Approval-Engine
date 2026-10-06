@@ -120,8 +120,8 @@ class CreditRiskEngine:
         warnings = [f"field '{k}' is not used by the engine and was ignored" for k in app if k not in self.raw_fields]
 
         try:
-            loan = float(app.get("loan_amnt"))
-        except (TypeError, ValueError):
+            loan = gr.to_number("loan_amnt", app.get("loan_amnt"))
+        except gr.InputError:
             raise ApplicationError("loan_amnt (loan amount in USD) is required and must be a number") from None
         if not 0 < loan <= 1_000_000:
             raise ApplicationError("loan_amnt must be between 0 and 1,000,000 USD")
@@ -129,20 +129,19 @@ class CreditRiskEngine:
         if pd.isna(term) or int(term) not in VALID_TERMS:
             raise ApplicationError("term is required and must be 36 or 60 (months)")
         app["term"] = f" {int(term)} months"
-        for field in ("annual_inc", "dti", "revol_util", "revol_bal"):
-            value = app.get(field)
-            if value is not None and float(value) < 0:
-                raise ApplicationError(f"{field} cannot be negative")
-        fico = app.get("fico_range_low")
-        if fico is not None and not 300 <= float(fico) <= 850:
-            raise ApplicationError("fico_range_low must be between 300 and 850")
-        if strict:
-            try:
+        try:
+            if strict:
                 gr.validate(app, self.numeric_fields)
-            except gr.InputError as err:
-                raise ApplicationError(str(err)) from None
-            if gr.fill_title(app):
-                warnings.append(f"loan title not given; filled from the purpose as '{app['title']}' (as LendingClub's form did)")
+            for field in ("annual_inc", "dti", "revol_util", "revol_bal"):
+                if app.get(field) not in (None, "") and gr.to_number(field, app[field]) < 0:
+                    raise gr.InputError(f"{field} cannot be negative")
+            if app.get("fico_range_low") not in (None, ""):
+                if not 300 <= gr.to_number("fico_range_low", app["fico_range_low"]) <= 850:
+                    raise gr.InputError("fico_range_low must be between 300 and 850")
+        except gr.InputError as err:
+            raise ApplicationError(str(err)) from None
+        if strict and gr.fill_title(app):
+            warnings.append(f"loan title not given; filled from the purpose as '{app['title']}' (as LendingClub's form did)")
 
         if not app.get("issue_d"):
             app["issue_d"] = date.today().strftime("%b-%Y")
@@ -185,7 +184,13 @@ class CreditRiskEngine:
         issues = gr.scope_issues(app, float(X["credit_history_months"].iloc[0])) if strict else []
         decision, notes = gr.final_decision(model_decision, issues, coverage) if strict else (model_decision, [])
         concepts = rc.concept_shap(self.booster.predict(X, pred_contrib=True), self.features)
-        reasons = rc.explain(concepts.iloc[0], X.iloc[0], n_risk=n_reasons, n_protective=n_strengths)
+        reasons = rc.explain(concepts.iloc[0], X.iloc[0], n_risk=n_reasons, n_protective=len(concepts.columns))
+        # v1.2: never present a derogatory record or a missing value as a "strength" (audit finding: the model learned
+        # some derogatory effects backwards from approved-only data; showing them as positives would be misleading)
+        reasons["protective_factors"] = [
+            r for r in reasons["protective_factors"]
+            if "not reported" not in r["reason"] and "not provided" not in r["reason"]
+            and not gr.is_adverse(r["concept"], X.iloc[0])][:n_strengths]
         for item in reasons["risk_factors"] + reasons["protective_factors"]:
             # target-encoded text fields have no missing flag: say so instead of showing a bare rate
             if item["concept"] in ("emp_title", "title") and item["concept"] in missing:
@@ -199,7 +204,7 @@ class CreditRiskEngine:
         if missing:
             warnings.append(f"{len(missing)} model input(s) not provided; the training medians / 'missing' "
                             "encodings were used (see missing_fields)")
-        return {
+        out = {
             "model": {"name": self.manifest["model_name"], "version": self.manifest["version"],
                       "policy_version": gr.GUARDRAILS_VERSION},
             "application_month": app["issue_d"],
@@ -221,3 +226,11 @@ class CreditRiskEngine:
             "warnings": warnings,
             "latency_ms": round((time.perf_counter() - start) * 1000, 1),
         }
+        if decision == "REFER":
+            # outside the training range the model's numbers are not valid: do not present them as a risk assessment
+            hidden = ("probability_of_default", "risk_band", "risk_band_label", "expected_loss_usd", "expected_loss_rate",
+                      "reasons", "strengths", "model_decision")
+            out["model_output_not_valid"] = {k: out[k] for k in hidden}
+            out.update({k: None for k in hidden})
+            out["reasons"], out["strengths"] = [], []
+        return out

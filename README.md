@@ -49,10 +49,12 @@ With the decision policy, it approves **66.8%** of applicants at an **11.6%** de
 cuts realised losses per dollar lent from **13.6% to 6.2%**. Criteria were committed before the test set was opened; 7 of 8 were met.
 The miss is documented: 60-month loans are under-predicted by about 2.5 points.
 
-**v1.1 guardrails** (after an independent black-box audit; the model itself is unchanged): applicants outside the
-training data's range (FICO < 660, DTI > 40%, loans outside $1k–$35k, credit history < 3 years, …) are **REFERred** to a person
-instead of scored; core fields are required; unknown categories, negative counts and future dates are rejected; applications
-missing most credit-bureau data are never auto-approved. These rules change 74 of the 212,801 test loans (0.03%); ROC-AUC is unchanged.
+**Guardrails v1.2** (added after two independent black-box audits; the model itself is unchanged): applicants outside the
+training data's range (FICO < 660, DTI > 40%, loans outside $1k–$35k or above 50% of annual income, credit history under 3 or
+over 70 years, …) are **REFERred** to a person and **not scored**; 12 core fields are required; unknown categories, malformed or
+negative numbers, fractional counts, impossible combinations and future dates are rejected with a 422; applications missing most
+credit-bureau data are never auto-approved; derogatory records and missing values are never shown as "strengths".
+On the test set these rules change 123 of 212,801 decisions (0.06%; `models/final/06_v1_1_guardrails/`).
 
 **Known limitations:** trained on approved loans only; monotonic constraints cover FICO, DTI, income, term, inquiries and
 utilisation, while delinquency, public-record and credit-age effects were learned from approved loans and can be weak or
@@ -181,7 +183,7 @@ LendingClub assigns those *after* its own risk decision, so **B is the deployabl
 }
 ```
 
-A real response from the live API (a 2015 applicant from the validation set; this loan was in fact repaid: a PD is a probability, not a verdict). Required: `loan_amnt`, `term` and 10 core fields (income, DTI, FICO, first credit line, home ownership, verification, purpose, state, utilisation, inquiries). Any of the 65 inputs can be added; missing ones are listed back. `decision` can also be `REFER` (out of scope); `model_decision` shows what the model alone would say.
+A real response from the live API (a 2015 applicant from the validation set; this loan was in fact repaid: a PD is a probability, not a verdict). Required: `loan_amnt`, `term` and 10 core fields (income, DTI, FICO, first credit line, home ownership, verification, purpose, state, utilisation, inquiries). Any of the 65 inputs can be added; missing ones are listed back. `decision` can also be `REFER` (out of scope: the model's output is then moved to `model_output_not_valid` and not presented as a score); `model_decision` shows what the model alone would say.
 
 ## 📁 Repository structure
 

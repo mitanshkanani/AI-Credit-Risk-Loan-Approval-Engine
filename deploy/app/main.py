@@ -25,6 +25,7 @@ ROOT = APP_DIR.parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.engine import ApplicationError, CreditRiskEngine  # noqa: E402
+from src.engine import guardrails as gr  # noqa: E402
 
 STATE = {}
 
@@ -39,19 +40,20 @@ async def lifespan(app):
 
 app = FastAPI(
     title="AI Credit Risk / Loan Approval Engine",
-    description="LightGBM model trained on LendingClub accepted loans (2012-2014). Returns a calibrated probability of "
-                "default, a risk band, an approve / review / decline decision, the expected loss in USD and the main "
-                "reasons. Educational demo - not a real lending decision.",
-    version="1.0.0",
+    description="LightGBM model (v1.0.0, frozen) trained on LendingClub accepted loans (2012-2014) with a v1.2 guardrail "
+                "policy. Returns a calibrated probability of default, a risk band, a decision (APPROVE / REVIEW / DECLINE, or "
+                "REFER when the applicant is outside the training data's range - then no score is given), the expected loss "
+                "in USD and the main reasons. Educational demo - not a real lending decision.",
+    version=gr.GUARDRAILS_VERSION,
     lifespan=lifespan,
 )
 app.mount("/static", StaticFiles(directory=APP_DIR / "static"), name="static")
 
 
 class Application(BaseModel):
-    """A loan application. Only loan_amnt and term are required; any of the engine's 65 input fields may be added
-    (see /api/model). Fields left out get the training median or the 'missing' encoding and are listed in
-    missing_fields."""
+    """A loan application. Required: loan_amnt, term, annual_inc, dti, fico_range_low, earliest_cr_line ('Mar-2010'),
+    home_ownership, verification_status, purpose, addr_state, revol_util, inq_last_6mths. Any of the engine's 65 input
+    fields may be added (see /api/model); missing ones get typical training values and are listed in missing_fields."""
 
     model_config = ConfigDict(extra="allow", json_schema_extra={"example": {
         "loan_amnt": 12000, "term": 36, "purpose": "debt_consolidation", "annual_inc": 72000, "dti": 18.5,
@@ -59,7 +61,7 @@ class Application(BaseModel):
         "addr_state": "CA", "earliest_cr_line": "Mar-2010", "revol_util": 41.2, "revol_bal": 8500,
         "open_acc": 9, "total_acc": 20, "inq_last_6mths": 1}})
 
-    loan_amnt: float = Field(..., gt=0, le=1_000_000, description="Loan amount in USD")
+    loan_amnt: float = Field(..., gt=0, le=1_000_000, strict=True, allow_inf_nan=False, description="Loan amount in USD")
     term: int | str = Field(..., description="36 or 60 (months)")
 
 
@@ -73,7 +75,8 @@ def health():
     engine = STATE.get("engine")
     return {"status": "ok" if engine else "loading",
             "model": engine.manifest["model_name"] if engine else None,
-            "version": engine.manifest["version"] if engine else None}
+            "version": engine.manifest["version"] if engine else None,
+            "policy_version": gr.GUARDRAILS_VERSION}
 
 
 @app.get("/api/model")

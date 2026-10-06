@@ -159,11 +159,11 @@ def main():
     again = engine.score(SPARSE_APPLICATION)
     check("same input -> same output",
           {k: v for k, v in again.items() if k != "latency_ms"} == {k: v for k, v in result.items() if k != "latency_ms"}, "")
-    fico = [engine.score({**SPARSE_APPLICATION, "fico_range_low": f})["probability_of_default"] for f in range(640, 851, 15)]
+    fico = [engine.score({**SPARSE_APPLICATION, "fico_range_low": f})["probability_of_default"] for f in range(660, 851, 15)]
     dti = [engine.score({**SPARSE_APPLICATION, "dti": d})["probability_of_default"] for d in range(0, 41, 4)]
     check("higher FICO never raises PD; higher DTI never lowers it",
           bool(np.all(np.diff(fico) <= 0) and np.all(np.diff(dti) >= 0)),
-          f"FICO 640->850: PD {fico[0]:.3f}->{fico[-1]:.3f}; DTI 0->40: PD {dti[0]:.3f}->{dti[-1]:.3f}")
+          f"FICO 660->850: PD {fico[0]:.3f}->{fico[-1]:.3f}; DTI 0->40: PD {dti[0]:.3f}->{dti[-1]:.3f}")
 
     # 7. latency
     times = []

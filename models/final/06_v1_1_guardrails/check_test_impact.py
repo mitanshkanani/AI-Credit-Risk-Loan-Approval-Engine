@@ -48,6 +48,12 @@ for field, (low, high, _) in gr.SCOPE.items():
 short = (X["credit_history_months"] < gr.MIN_CREDIT_HISTORY_MONTHS).to_numpy()
 reasons["credit_history_under_36_months"] = int(short.sum())
 out_of_scope |= short
+long_ = (X["credit_history_months"] > gr.MAX_CREDIT_HISTORY_MONTHS).to_numpy()
+reasons["credit_history_over_70_years"] = int(long_.sum())
+out_of_scope |= long_
+lti = (num["loan_amnt"] / num["annual_inc"] > gr.MAX_LOAN_TO_INCOME).fillna(False).to_numpy()
+reasons["loan_over_50pct_of_income"] = int(lti.sum())
+out_of_scope |= lti
 coverage = 1 - raw[engine.bureau_fields].isna().mean(axis=1).to_numpy()
 thin = coverage < gr.MIN_BUREAU_COVERAGE
 
@@ -63,6 +69,7 @@ result = {
     "approve_to_review_thin_bureau": int(((model_decision == "APPROVE") & thin & ~out_of_scope).sum()),
     "roc_auc_unchanged": float(roc_auc_score(y, pd_test)),
     "v1_0": {"approve_share": float((model_decision == "APPROVE").mean()), "approve_default_rate": float(y[model_decision == "APPROVE"].mean())},
+    "guardrails_version": gr.GUARDRAILS_VERSION,
     "v1_1": {"approve_share": float(approved.mean()), "approve_default_rate": float(y[approved].mean()),
              "refer_share": float((final == "REFER").mean()),
              "refer_default_rate": float(y[final == "REFER"].mean()) if (final == "REFER").any() else None},

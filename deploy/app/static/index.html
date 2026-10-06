@@ -186,7 +186,7 @@ footer { color: var(--muted); font-size: 12.5px; margin-top: 24px; line-height: 
     Platt calibration → decision policy (approve if PD ≤ <span id="tA">22.5%</span>, decline if PD ≥ <span id="tD">27.5%</span>) → expected loss = PD × amount × exposure × loss-given-default → SHAP reason codes.
     The model never sees LendingClub's grade or interest rate. <br>
     <b>Limitations:</b> <span id="limits"></span> <br>
-    <b>v1.1 guardrails:</b> applicants outside the training data's range (e.g. FICO &lt; 660, DTI &gt; 40%, loans outside $1k–$35k) are REFERred to a person instead of scored; applications without most credit-bureau data are never auto-approved. <br>Educational project. Not a real credit decision.
+    <b>Guardrails (v1.2):</b> applicants outside the training data's range (e.g. FICO &lt; 660, DTI &gt; 40%, loans outside $1k–$35k or above 50% of income) are REFERred to a person and not scored; applications without most credit-bureau data are never auto-approved. <br>Educational project. Not a real credit decision.
   </footer>
 </div>
 
@@ -242,6 +242,7 @@ function buildApplication() {
   if (current && mode === "sample") {
     for (const [k, v] of Object.entries(current.application)) if (!FORM_FIELDS.includes(k) && k !== "issue_d") app[k] = v;
   }
+  if (current && mode === "sample" && form.elements.purpose.value !== current.application.purpose) delete app.title;
   for (const name of FORM_FIELDS) {
     const raw = form.elements[name].value.trim();
     if (raw === "") continue;
@@ -253,6 +254,16 @@ function buildApplication() {
 }
 
 function renderResult(r) {
+  if (r.decision === "REFER") {
+    resultBox.innerHTML = `
+      <h2>3 · Result</h2>
+      <div class="decision REFER"><div><div class="label">Decision</div><div class="value">REFER</div></div>
+        <div class="rule">sent to a credit officer<br>not scored</div></div>
+      <div class="guard"><b>Out of scope.</b> ${esc(r.guardrail_notes.join(" ").replace(/^Out of scope, sent to a credit officer \(the model's score is not valid here\): /, ""))}</div>
+      <p class="note">The model was trained only on loans LendingClub approved. For applicants outside that range its probability of default is not meaningful, so no score, band or expected loss is shown.</p>
+      <details><summary>Raw JSON response (${r.latency_ms} ms)</summary><pre>${esc(JSON.stringify(r, null, 2))}</pre></details>`;
+    return;
+  }
   const needle = Math.min(r.probability_of_default, 1) * 100;
   const list = (items, cls, sym) => items.length ? items.map(x => `<li><span class="${cls}">${sym}</span><span>${esc(x.reason)}</span></li>`).join("")
                                                  : `<li><span class="note">none</span></li>`;

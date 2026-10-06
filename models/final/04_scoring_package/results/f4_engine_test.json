@@ -59,20 +59,20 @@
       "check": "higher FICO never raises PD; higher DTI never lowers it",
       "status": "PASS",
       "required": true,
-      "detail": "FICO 640->850: PD 0.134->0.048; DTI 0->40: PD 0.076->0.191"
+      "detail": "FICO 660->850: PD 0.134->0.048; DTI 0->40: PD 0.076->0.191"
     },
     {
       "check": "one application scored in under 200 ms (median of 50)",
       "status": "PASS",
       "required": false,
-      "detail": "median 129 ms, p95 140 ms"
+      "detail": "median 97 ms, p95 129 ms"
     }
   ],
   "example_output": {
     "model": {
       "name": "M3-B-mono-nozip",
       "version": "1.0.0",
-      "policy_version": "1.1.0"
+      "policy_version": "1.2.0"
     },
     "application_month": "Oct-2026",
     "probability_of_default": 0.1008,
@@ -169,20 +169,18 @@
     "warnings": [
       "47 model input(s) not provided; the training medians / 'missing' encodings were used (see missing_fields)"
     ],
-    "latency_ms": 111.4
+    "latency_ms": 147.3
   },
   "fico_sweep": [
     0.1343,
-    0.1343,
-    0.1257,
-    0.1138,
-    0.1008,
-    0.0858,
-    0.0735,
-    0.0635,
-    0.0552,
-    0.0522,
-    0.0475,
+    0.1227,
+    0.106,
+    0.096,
+    0.0811,
+    0.0714,
+    0.0606,
+    0.054,
+    0.052,
     0.0475,
     0.0475,
     0.0475,
@@ -201,5 +199,5 @@
     0.1912,
     0.1912
   ],
-  "latency_ms_median": 129.25554998219013
+  "latency_ms_median": 96.8997500021942
 }

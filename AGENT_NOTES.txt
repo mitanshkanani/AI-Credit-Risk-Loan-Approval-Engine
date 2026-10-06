@@ -192,6 +192,11 @@ Modeling progress (models/)
   (models/final/06_v1_1_guardrails/). UI: two modes (real sample / own
   application), no novalidate. v2 ideas: drop title/emp_title, more
   monotonic constraints (needs retraining).
+  v1.2 (after re-audit): REFER if loan > 50% of income or history > 70 yrs;
+  REFER responses hide PD/band/EL (model_output_not_valid); strict number
+  parsing (no 500s), whole-number counts, open_acc <= total_acc; derogatory /
+  missing values never shown as strengths; API docs + /api/health show
+  policy_version 1.2.0. Test impact now 123/212,801.
   PROJECT (accepted loans) COMPLETE. Possible next: rejected-loans part 2,
   v1.1 term-specific calibration (needs newer data), project summary PDF.
   Stage 6 details: Folder deploy/:
