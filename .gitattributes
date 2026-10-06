@@ -1,0 +1,2 @@
+# Scoring bundle: byte-exact (checksums in manifest.json), never convert line endings
+models/final/04_scoring_package/bundle/** binary
