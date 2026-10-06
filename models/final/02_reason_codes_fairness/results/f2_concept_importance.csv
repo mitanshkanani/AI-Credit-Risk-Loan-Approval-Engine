@@ -1,0 +1,66 @@
+concept,mean_abs_shap,label
+term_months,0.35498663400202074,Loan term
+fico_range_low,0.19689823287818214,Credit score (FICO)
+loan_amnt,0.19239471348215517,Loan amount
+annual_inc,0.1876812366981708,Annual income
+dti,0.15487026141535876,Debt-to-income ratio
+acc_open_past_24mths,0.12275635717595354,Accounts opened in the last 24 months
+emp_title,0.10397630151046212,Job title (historical default rate of similar titles)
+home_ownership,0.08734911959636339,Home ownership
+num_tl_op_past_12m,0.0802545375175683,Accounts opened in the last 12 months
+percent_bc_gt_75,0.07095419525034066,Share of bankcards above 75% utilisation
+total_il_high_credit_limit,0.06791632026333771,Total installment credit limit
+addr_state,0.06786321973532959,State
+mo_sin_old_rev_tl_op,0.06299144249768521,Age of oldest revolving account
+mths_since_recent_bc,0.06126395594332519,Months since newest bankcard
+total_bc_limit,0.06008861636944044,Total bankcard limit
+mths_since_recent_inq,0.05825745084006043,Months since the most recent credit inquiry
+bc_util,0.05531126320120404,Bankcard utilisation
+purpose,0.04797220086402388,Loan purpose
+bc_open_to_buy,0.04678329150749641,Unused bankcard credit
+mo_sin_rcnt_rev_tl_op,0.046299543547505005,Months since newest revolving account
+num_il_tl,0.0452454703487973,Installment accounts
+total_acc,0.04504635910358487,Total credit lines ever
+tot_hi_cred_lim,0.04441726374600757,Total credit limit
+pct_tl_nvr_dlq,0.043731064021924095,Share of accounts never delinquent
+revol_util,0.0434473942298994,Revolving credit utilisation
+inq_last_6mths,0.042774292114393056,Credit inquiries in the last 6 months
+mo_sin_rcnt_tl,0.03976228899029296,Months since newest account
+total_bal_ex_mort,0.0384218623334856,Total balance excluding mortgage
+credit_history_months,0.03601037763980142,Length of credit history
+title,0.03580834030170558,Loan title (historical default rate)
+total_rev_hi_lim,0.03523863343366979,Total revolving credit limit
+revol_bal,0.03457522331069194,Revolving balance
+mths_since_last_delinq,0.03421499961929765,Months since last delinquency
+verification_status,0.0341548238095033,Income verification
+emp_length_years,0.032795473180335155,Employment length
+num_rev_tl_bal_gt_0,0.030254559991705503,Revolving accounts with a balance
+avg_cur_bal,0.02938137527918989,Average balance per account
+num_rev_accts,0.025860660723890025,Revolving accounts
+mo_sin_old_il_acct,0.024876565207228116,Age of oldest installment account
+tot_cur_bal,0.020040968497540453,Total current balance
+mort_acc,0.019555365111472604,Mortgage accounts
+mths_since_recent_bc_dlq,0.01898230565816349,Months since last bankcard delinquency
+num_bc_tl,0.01786575227575755,Bankcard accounts
+num_actv_rev_tl,0.016607305401431773,Active revolving accounts
+mths_since_last_major_derog,0.016397583031964487,Months since last major derogatory mark
+num_bc_sats,0.01638282990240983,Satisfactory bankcard accounts
+mths_since_last_record,0.013421144965146644,Months since last public record
+delinq_2yrs,0.012375410003504363,Delinquencies in the last 2 years
+num_op_rev_tl,0.011509180746416605,Open revolving accounts
+mths_since_recent_revol_delinq,0.011389450291129066,Months since last revolving delinquency
+num_sats,0.009658958547063537,Satisfactory accounts
+num_actv_bc_tl,0.009263985157542622,Active bankcard accounts
+tot_coll_amt,0.00682093450242625,Total amount ever in collections
+pub_rec_bankruptcies,0.006011739369062283,Bankruptcies on record
+num_accts_ever_120_pd,0.00518214703785305,Accounts ever 120+ days past due
+open_acc,0.004444941553858073,Open credit lines
+pub_rec,0.0028007188357594397,Public records
+chargeoff_within_12_mths,0.002197444652032557,Charge-offs in the last 12 months
+tax_liens,0.0016457383828162892,Tax liens
+collections_12_mths_ex_med,0.0012935245666179235,Collections in the last 12 months (non-medical)
+num_tl_90g_dpd_24m,0.0010411294531810769,Accounts 90+ days past due (last 24 months)
+num_tl_120dpd_2m,0.0005314868427190748,Accounts 120+ days past due (last 2 months)
+acc_now_delinq,0.0,Accounts currently delinquent
+delinq_amnt,0.0,Amount currently past due
+num_tl_30dpd,0.0,Accounts 30 days past due

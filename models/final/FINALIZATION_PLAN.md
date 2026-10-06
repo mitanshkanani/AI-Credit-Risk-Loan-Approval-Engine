@@ -14,6 +14,7 @@ split stays sealed until Stage 5**, and every decision is frozen before it is op
 | 3. Decision layer | Risk bands, approve / review / decline thresholds, expected loss (PD × LGD × exposure), with LGD estimated from recoveries on **defaulted training loans** | Thresholds chosen on validation from an explicit business target |
 | 4. Scoring package | One loadable engine: preprocessor → model → calibrator → decision layer, in one consistent environment (scikit-learn version aligned) | Fresh-session test: raw application in, final JSON out |
 | 5. Final test (once) | Open the sealed 2015 H2 test set, score the frozen engine, report every metric; optional 2016-2018 stress check | Nothing may change after this |
+| 6. Live demo | FastAPI scoring service + a small web front end (application form with sample profiles → PD, risk band, decision, reasons), deployed together at one public link for the resume | Free hosting that fits the model's memory (e.g. one Docker app on Hugging Face Spaces) |
 
 Light work (loading saved models, calibration, SHAP, decision rules) runs locally in Jupyter; any
 heavy retraining runs on Kaggle, as with M2-M4.

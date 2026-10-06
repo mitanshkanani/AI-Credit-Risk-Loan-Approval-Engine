@@ -1,0 +1,19 @@
+example,pd_calibrated,defaulted,type,concept,reason,shap_log_odds
+low risk,0.05535837255182208,0,raises risk,loan_amnt,"Loan amount: $24,000",0.21634003400211732
+low risk,0.05535837255182208,0,raises risk,mths_since_last_delinq,Months since last delinquency: 9 months,0.11631300509518643
+low risk,0.05535837255182208,0,raises risk,delinq_2yrs,Delinquencies in the last 2 years: 3,0.11598395132633224
+low risk,0.05535837255182208,0,raises risk,mths_since_recent_bc_dlq,Months since last bankcard delinquency: 9 months,0.10512664301624351
+low risk,0.05535837255182208,0,lowers risk,annual_inc,"Annual income: $160,000",-0.33674311022260267
+low risk,0.05535837255182208,0,lowers risk,term_months,Loan term: 36 months,-0.26021059965582394
+medium risk,0.1687366583975257,0,raises risk,annual_inc,"Annual income: $40,587",0.27695026109077203
+medium risk,0.1687366583975257,0,raises risk,dti,Debt-to-income ratio: 32.8%,0.2265113239770625
+medium risk,0.1687366583975257,0,raises risk,addr_state,State: TN,0.10272035880105099
+medium risk,0.1687366583975257,0,raises risk,revol_util,Revolving credit utilisation: 91.5%,0.09458534929772494
+medium risk,0.1687366583975257,0,lowers risk,term_months,Loan term: 36 months,-0.2267550951556905
+medium risk,0.1687366583975257,0,lowers risk,acc_open_past_24mths,Accounts opened in the last 24 months: 2,-0.15975893080540196
+high risk,0.49084501645462525,1,raises risk,term_months,Loan term: 60 months,0.6509268252915726
+high risk,0.49084501645462525,1,raises risk,dti,Debt-to-income ratio: 37.0%,0.5423147414983044
+high risk,0.49084501645462525,1,raises risk,annual_inc,"Annual income: $28,800",0.4147273275445691
+high risk,0.49084501645462525,1,raises risk,num_tl_op_past_12m,Accounts opened in the last 12 months: 4,0.12763731717523413
+high risk,0.49084501645462525,1,lowers risk,pct_tl_nvr_dlq,Share of accounts never delinquent: 75.9%,-0.15103685844310366
+high risk,0.49084501645462525,1,lowers risk,chargeoff_within_12_mths,Charge-offs in the last 12 months: 1,-0.12851302851717927
