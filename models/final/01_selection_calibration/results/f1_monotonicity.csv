@@ -1,0 +1,13 @@
+model,feature,expected,grid_points,applicants_with_violation,share,largest_wrong_step_pd_points
+M3-B,fico_range_low,PD down,16,676,0.676,2.076170884262518
+M3-B,dti,PD up,25,963,0.963,0.9591006548904879
+M3-B,annual_inc,PD down,25,999,0.999,4.197194784227021
+M3-B,term_months,PD up,2,0,0.0,0.0
+M3-B,inq_last_6mths,PD up,4,71,0.071,0.3991479450562274
+M3-B,revol_util,PD up,25,1000,1.0,1.524721423485964
+M3-B-mono,fico_range_low,PD down,16,0,0.0,0.0
+M3-B-mono,dti,PD up,25,0,0.0,0.0
+M3-B-mono,annual_inc,PD down,25,0,0.0,0.0
+M3-B-mono,term_months,PD up,2,0,0.0,0.0
+M3-B-mono,inq_last_6mths,PD up,4,0,0.0,0.0
+M3-B-mono,revol_util,PD up,25,0,0.0,0.0

@@ -104,11 +104,18 @@ Modeling progress (models/)
   a second library. LightGBM is preferred by the tie rule (about 2.3x faster:
   41 s vs 97 s per search fit). Model files results/m4_*.ubj are gitignored.
   Dataset credit-risk-model-inputs latest version includes m3 predictions.
-- Model ladder M0-M4 is COMPLETE. Leading candidate: M3 LightGBM version B
-  (or B-mono, which costs only 0.0008 ROC-AUC and is easier to defend).
-  Still to do per docs/model_strategy.pdf: pick the final model, calibrate it
-  on validation, SHAP reason codes, fairness check, decision layer, then open
-  the TEST split once. Wait for the user's go-ahead.
+- Model ladder M0-M4 is COMPLETE. User chose NOT to build CatBoost and to
+  finalize M3 instead. Plan: models/final/FINALIZATION_PLAN.md (5 stages,
+  user reviews each; test sealed until Stage 5).
+- Final Stage 1 (model choice + calibration): DONE locally (2026-10-06).
+  FINAL MODEL = M3-B-mono (models/M3_lightgbm/results/m3_B_mono.txt;
+  LightGBM saves "Not Verified" feature names as "Not_Verified").
+  0 monotonicity violations vs 3,709 for M3-B; cost 0.0008 ROC-AUC.
+  Calibration = Platt, saved as plain JSON
+  models/final/01_selection_calibration/results/calibrator.json
+  (a=1.0412, b=0.1723); mean PD 18.70% -> 20.35% (actual 20.35%).
+  60-month loans still under-predicted by ~1.1 pts. Next: Stage 2
+  (reason codes + fairness), after the user's go-ahead.
 - The TEST split is sealed: load_split("test") raises unless allow_test=True.
   Only open it for the final chosen model.
 - The user reviews each model before the next one starts. Do NOT start
