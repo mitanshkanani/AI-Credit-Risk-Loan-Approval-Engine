@@ -97,6 +97,18 @@ Modeling progress (models/)
   leaderboard). Upload with PowerShell + Windows paths (bash C:/ paths break
   `kaggle datasets create`). Model files results/m3_*.txt are gitignored.
   For M4, add m3_validation_pd.parquet to the dataset (`kaggle datasets version`).
+- M4 XGBoost: DONE (2026-10-06) ON KAGGLE (kernel credit-risk-m4-xgboost,
+  version 2 = full run, 162 min; version 1 = smoke test). Validation ROC-AUC
+  A 0.7412 / B 0.7356 / B-mono 0.7346, Brier B 0.1427. TIE with M3
+  (M4-M3 = -0.0006 on B, Spearman 0.990): the boosting gain is confirmed by
+  a second library. LightGBM is preferred by the tie rule (about 2.3x faster:
+  41 s vs 97 s per search fit). Model files results/m4_*.ubj are gitignored.
+  Dataset credit-risk-model-inputs latest version includes m3 predictions.
+- Model ladder M0-M4 is COMPLETE. Leading candidate: M3 LightGBM version B
+  (or B-mono, which costs only 0.0008 ROC-AUC and is easier to defend).
+  Still to do per docs/model_strategy.pdf: pick the final model, calibrate it
+  on validation, SHAP reason codes, fairness check, decision layer, then open
+  the TEST split once. Wait for the user's go-ahead.
 - The TEST split is sealed: load_split("test") raises unless allow_test=True.
   Only open it for the final chosen model.
 - The user reviews each model before the next one starts. Do NOT start

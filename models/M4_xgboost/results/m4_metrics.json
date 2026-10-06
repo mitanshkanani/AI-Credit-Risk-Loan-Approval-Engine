@@ -1,0 +1,208 @@
+{
+  "model": "M4",
+  "name": "XGBoost",
+  "estimator": "xgboost.train (gbtree, hist)",
+  "fixed_parameters": {
+    "objective": "binary:logistic",
+    "eval_metric": [
+      "logloss",
+      "auc"
+    ],
+    "tree_method": "hist",
+    "seed": 42,
+    "verbosity": 0
+  },
+  "search": {
+    "type": "random search",
+    "settings_per_version": 40,
+    "learning_rate": 0.05,
+    "early_stopping_rounds": 100,
+    "max_rounds": 5000,
+    "ranges": {
+      "max_depth": [
+        3,
+        10
+      ],
+      "min_child_weight": [
+        1,
+        200
+      ],
+      "subsample": [
+        0.5,
+        1.0
+      ],
+      "colsample_bytree": [
+        0.4,
+        1.0
+      ],
+      "reg_lambda": [
+        0.001,
+        10
+      ],
+      "reg_alpha": [
+        0.0001,
+        10
+      ],
+      "gamma": [
+        0,
+        1
+      ]
+    }
+  },
+  "selection_rule": "max validation ROC-AUC; within 0.0005 prefer smaller max_depth; lr 0.02 kept only if +0.0005",
+  "chosen": {
+    "A": {
+      "max_depth": 3,
+      "min_child_weight": 10.23,
+      "subsample": 0.929,
+      "colsample_bytree": 0.818,
+      "reg_lambda": 0.0023807258718953534,
+      "reg_alpha": 7.552865626115626,
+      "gamma": 0.761
+    },
+    "B": {
+      "max_depth": 3,
+      "min_child_weight": 10.23,
+      "subsample": 0.929,
+      "colsample_bytree": 0.818,
+      "reg_lambda": 0.0023807258718953534,
+      "reg_alpha": 7.552865626115626,
+      "gamma": 0.761
+    }
+  },
+  "final_learning_rate": {
+    "A": 0.05,
+    "B": 0.05,
+    "B-mono": 0.05
+  },
+  "best_iteration": {
+    "A": 2334,
+    "B": 2584,
+    "B-mono": 1790
+  },
+  "final_fit_seconds": {
+    "A": 241.5,
+    "B": 220.8,
+    "B-mono": 160.3
+  },
+  "scale_pos_weight_tested": 4.799127420511595,
+  "monotone_constraints": {
+    "fico_range_low": -1,
+    "dti": 1,
+    "annual_inc": -1,
+    "term_months": 1,
+    "inq_last_6mths": 1,
+    "revol_util": 1
+  },
+  "n_features": {
+    "A": 189,
+    "B": 147
+  },
+  "environment": {
+    "python": "3.13.15",
+    "pandas": "2.3.3",
+    "scikit_learn": "1.6.1",
+    "xgboost": "3.4.1",
+    "platform": "Kaggle CPU notebook",
+    "cpu_cores": 4
+  },
+  "metrics": {
+    "A": {
+      "train": {
+        "rows": 388124,
+        "defaults": 66928,
+        "default_rate": 0.17243973575455268,
+        "mean_pd": 0.17241767741804764,
+        "calibration_gap": -2.2058336505037524e-05,
+        "roc_auc": 0.7475787395104612,
+        "pr_auc": 0.39105959097640486,
+        "ks": 0.3634452982292452,
+        "brier": 0.12536599982133634,
+        "log_loss": 0.4018052772128866,
+        "accuracy_at_threshold": 0.8317573765085385,
+        "default_recall_at_threshold": 0.06111044704757351,
+        "threshold": 0.5
+      },
+      "validation": {
+        "rows": 162745,
+        "defaults": 33120,
+        "default_rate": 0.20350855633045561,
+        "mean_pd": 0.1789025906435114,
+        "calibration_gap": -0.024605965686944203,
+        "roc_auc": 0.741169550077099,
+        "pr_auc": 0.4248169196222287,
+        "ks": 0.35169887006834094,
+        "brier": 0.1422636991415543,
+        "log_loss": 0.44500454028034025,
+        "accuracy_at_threshold": 0.8033918092721742,
+        "default_recall_at_threshold": 0.08789251207729469,
+        "threshold": 0.5
+      }
+    },
+    "B": {
+      "train": {
+        "rows": 388124,
+        "defaults": 66928,
+        "default_rate": 0.17243973575455268,
+        "mean_pd": 0.17245172963495903,
+        "calibration_gap": 1.1993880406346857e-05,
+        "roc_auc": 0.747068450493602,
+        "pr_auc": 0.3892392774261986,
+        "ks": 0.36236977561365585,
+        "brier": 0.12548756560917468,
+        "log_loss": 0.40226358910938276,
+        "accuracy_at_threshold": 0.8319222722635035,
+        "default_recall_at_threshold": 0.06714678460435095,
+        "threshold": 0.5
+      },
+      "validation": {
+        "rows": 162745,
+        "defaults": 33120,
+        "default_rate": 0.20350855633045561,
+        "mean_pd": 0.18743957926307278,
+        "calibration_gap": -0.016068977067382834,
+        "roc_auc": 0.7355923468151813,
+        "pr_auc": 0.42013382606977684,
+        "ks": 0.3414800800339143,
+        "brier": 0.1427246036689191,
+        "log_loss": 0.4465907524434275,
+        "accuracy_at_threshold": 0.8033795201081446,
+        "default_recall_at_threshold": 0.09396135265700484,
+        "threshold": 0.5
+      }
+    },
+    "B-mono": {
+      "train": {
+        "rows": 388124,
+        "defaults": 66928,
+        "default_rate": 0.17243973575455268,
+        "mean_pd": 0.17242563407079978,
+        "calibration_gap": -1.4101683752903993e-05,
+        "roc_auc": 0.738998590002154,
+        "pr_auc": 0.37682052553329837,
+        "ks": 0.3495369388252549,
+        "brier": 0.12666265006592875,
+        "log_loss": 0.40596759063588717,
+        "accuracy_at_threshold": 0.8311647823891334,
+        "default_recall_at_threshold": 0.06498027731293331,
+        "threshold": 0.5
+      },
+      "validation": {
+        "rows": 162745,
+        "defaults": 33120,
+        "default_rate": 0.20350855633045561,
+        "mean_pd": 0.1869133825713403,
+        "calibration_gap": -0.016595173759115317,
+        "roc_auc": 0.734557298086733,
+        "pr_auc": 0.4193145089258702,
+        "ks": 0.33996536832837193,
+        "brier": 0.14289902954016728,
+        "log_loss": 0.4471719416642757,
+        "accuracy_at_threshold": 0.8034286767642631,
+        "default_recall_at_threshold": 0.09344806763285024,
+        "threshold": 0.5
+      }
+    }
+  },
+  "test_split": "sealed"
+}

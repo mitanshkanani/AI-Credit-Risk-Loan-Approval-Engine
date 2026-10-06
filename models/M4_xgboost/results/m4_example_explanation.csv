@@ -1,0 +1,9 @@
+feature,value,shap_log_odds,direction
+term_months,60.0,0.6342964,raises risk
+acc_open_past_24mths,12.0,0.3715231,raises risk
+fico_range_low,660.0,0.22602025,raises risk
+emp_title,0.23291218850966955,0.19312909,raises risk
+percent_bc_gt_75,11.1,-0.17258628,lowers risk
+mths_since_recent_bc,1.0,0.1600478,raises risk
+inq_last_6mths,4.0,0.14439501,raises risk
+total_il_high_credit_limit,66652.0,-0.119579725,lowers risk
