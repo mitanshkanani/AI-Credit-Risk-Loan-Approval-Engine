@@ -176,7 +176,15 @@ Modeling progress (models/)
   default), EL/real 0.886. Raw CSV -> engine on 5,000 test loans: diff 0.0.
   Stress 2016/17/18 ROC-AUC 0.719/0.711/0.704. Leaderboard has a test row.
   Engine v1.0.0 is FINAL - do not change model/calibrator/policy.
-- Stage 6 (live demo): CODE DONE + tested locally (2026-10-06). Folder deploy/:
+- Stage 6 (live demo): LIVE at https://credit-risk-engine-dhib.onrender.com
+  (Render free web service, Blueprint from render.yaml + root Dockerfile,
+  auto-deploys on every push to main; sleeps after 15 idle min, ~50 s wake).
+  Hugging Face Docker Spaces need PRO (402) -> not used (deploy/build_space.py
+  kept for that option). Engine caches TargetEncoder lookups at start-up
+  (identical output, tested): ~0.7 s/score on Render, 0.12 s locally.
+  PROJECT (accepted loans) COMPLETE. Possible next: rejected-loans part 2,
+  v1.1 term-specific calibration (needs newer data), project summary PDF.
+  Stage 6 details: Folder deploy/:
   app/main.py (FastAPI: /, /api/health, /api/model, /api/samples, /api/score,
   /docs), app/static/index.html (single page, light/dark, mobile),
   app/samples.json + model_card.json (built by deploy/build_samples.py from 6

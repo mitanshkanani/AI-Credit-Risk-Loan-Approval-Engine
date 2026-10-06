@@ -4,16 +4,24 @@
 
 **An end-to-end machine-learning engine that estimates the probability that a loan applicant will default,<br/>and turns it into an explainable approve / review / decline decision.**
 
-![Python](https://img.shields.io/badge/Python-3.13%2B-3776AB?logo=python&logoColor=white)
+### 🔴 Live demo: **[credit-risk-engine-dhib.onrender.com](https://credit-risk-engine-dhib.onrender.com)** · [API docs](https://credit-risk-engine-dhib.onrender.com/docs)
+<sub>Free hosting: the first visit after 15 idle minutes takes ~50 s to wake up.</sub>
+
+![Python](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.9-F7931E?logo=scikitlearn&logoColor=white)
 ![pandas](https://img.shields.io/badge/pandas-2.x-150458?logo=pandas&logoColor=white)
 ![Data](https://img.shields.io/badge/data-LendingClub%202007--2018-2e9b5b)
 ![Audits](https://img.shields.io/badge/preprocessing%20audits-72%2F72%20passing-brightgreen)
-![Status](https://img.shields.io/badge/status-modeling%20next-orange)
+![LightGBM](https://img.shields.io/badge/LightGBM-4.7-9acd32)
+![FastAPI](https://img.shields.io/badge/FastAPI-live-009688?logo=fastapi&logoColor=white)
+![Test ROC-AUC](https://img.shields.io/badge/test%20ROC--AUC-0.746-brightgreen)
 
 [Pipeline diagram](docs/preprocessing_architecture.svg) ·
 [Model strategy (PDF)](docs/model_strategy.pdf) ·
-[Preprocessing report](artifacts_v2/preprocessing_v2_report.md)
+[Preprocessing report](artifacts_v2/preprocessing_v2_report.md) ·
+[Final test (PDF)](models/final/05_final_test/F5_final_test.pdf)
+
+![Live demo](docs/demo_screenshot.png)
 
 </div>
 
@@ -26,7 +34,20 @@ This project builds that decision engine on **2.26 million real LendingClub loan
 
 1. **Credit-risk model**: predicts the **probability of default (PD)** for a new application.
 2. **Decision layer**: turns the PD into a risk band, an approve / review / decline decision, an expected loss, and the reasons behind it.
-3. **Web deployment** (planned): a form on a website goes in, and an explainable decision comes out.
+3. **Web deployment** ([live](https://credit-risk-engine-dhib.onrender.com)): a form on a website goes in, and an explainable decision comes out, served by a FastAPI API.
+
+## 🏆 Results (sealed 2015 H2 test set, 212,801 loans, opened once)
+
+| | Our engine (version B) | LendingClub's own interest rate |
+|---|---:|---:|
+| ROC-AUC | **0.746** | 0.715 |
+| KS | 0.360 | – |
+| Mean predicted vs actual default rate | 19.6% vs 20.1% | – |
+
+The engine ranks risk better than LendingClub's own pricing **without ever seeing LendingClub's grade or interest rate**.
+With the decision policy, it approves **66.8%** of applicants at an **11.6%** default rate (vs 20.1% for all funded loans) and
+cuts realised losses per dollar lent from **13.6% to 6.2%**. Criteria were committed before the test set was opened; 7 of 8 were met.
+The miss is documented: 60-month loans are under-predicted by about 2.5 points.
 
 The work is done the way a real credit-risk team would do it. Every column is checked for **data leakage**, the model is evaluated on **later loans than it was trained on**, and every preprocessing step is **verified by automated audits**.
 
@@ -45,10 +66,11 @@ The work is done the way a real credit-risk team would do it. Every column is ch
 - [x] Column-by-column leakage audit
 - [x] Preprocessing V2: temporal split, fitted pipeline, 72/72 audits passing
 - [x] Architecture diagram and model strategy document
-- [ ] Baseline models: dummy, Logistic Regression
-- [ ] Tree ensembles: Random Forest, LightGBM, XGBoost (each with and without LendingClub grade features)
-- [ ] Calibration, SHAP explanations, fairness checks, decision layer
-- [ ] Scoring API and website
+- [x] Model ladder M0–M4: dummy, Logistic Regression, Random Forest, LightGBM, XGBoost (each with and without LendingClub grade features)
+- [x] Final model: monotonic LightGBM, Platt calibration, `zip_code` removed for fair-lending reasons
+- [x] SHAP reason codes, geographic fairness checks, decision layer (risk bands, thresholds, expected loss)
+- [x] Scoring package with checksummed bundle, final test on the sealed set
+- [x] FastAPI service + web page, deployed with Docker
 - [ ] Part 2: rejected-applications model
 
 ## 📊 Dataset
@@ -107,40 +129,49 @@ flowchart TD
 | One-hot | 107 | grade, sub_grade, home_ownership, verification_status, purpose, addr_state (rare categories grouped) |
 | Target-encoded | 3 | `zip_code`, `emp_title`, `title`: smoothed, out-of-fold default rates |
 
-## 🤖 Modeling plan
+## 🤖 Model ladder (validation 2015 H1, version B)
 
-Models are added in order of complexity, and each must beat the previous one on the validation set
-([full reasoning](docs/model_strategy.pdf)):
+Models were added in order of complexity; each had to beat the previous one ([strategy](docs/model_strategy.pdf)).
+Every folder in `models/` holds an implementation plan, an executed notebook and a short PDF.
 
-| Step | Model | Question it answers |
-|---|---|---|
-| M0 | Dummy baseline | What does zero intelligence score? |
-| M1 | Logistic Regression | How far does a simple, explainable model get? Any leakage? |
-| M2 | Random Forest | Do non-linear effects and interactions add signal? |
-| M3 | LightGBM | What is the best accuracy on this data? *(main candidate)* |
-| M4 | XGBoost | Is that result robust across libraries? |
-| M5 | Scorecard *(optional)* | Can it be expressed as a classic credit points scorecard? |
+| Step | Model | Validation ROC-AUC | Verdict |
+|---|---|---:|---|
+| M0 | Dummy baseline | 0.500 | floor |
+| M1 | Logistic Regression | 0.725 | strong, explainable baseline |
+| M2 | Random Forest | 0.727 | no real gain |
+| M3 | **LightGBM** | **0.736** | clear gain → **chosen** |
+| M4 | XGBoost | 0.736 | tie: confirms the result; LightGBM is 2.3× faster |
 
-Every model is trained in two versions: **A** with LendingClub's own `grade`, `sub_grade`, `int_rate` and `installment`, and **B** without them.
-LendingClub assigns those values *after* its own risk decision, so a real approval engine would not have them yet. **B is the deployable model**, and A is a benchmark.
+Version **A** uses LendingClub's `grade`, `sub_grade`, `int_rate`, `installment`; version **B** does not.
+LendingClub assigns those *after* its own risk decision, so **B is the deployable model**.
 
-**Evaluation:** ROC-AUC (main), PR-AUC, KS statistic, Brier score and calibration, and the approval-rate vs bad-rate curve, reported separately for 36- and 60-month loans. Choices are made on validation, and the test set is used once.
+**Finalization** (`models/final/`): ① monotonic constraints (higher FICO never raises risk) + Platt calibration ·
+② SHAP reason codes and fairness: `zip_code` added only +0.0004 ROC-AUC so it was dropped ·
+③ decision layer: approve if PD ≤ 22.5%, decline if PD ≥ 27.5%, expected loss = PD × amount × EAD share × LGD ·
+④ one checksummed scoring bundle · ⑤ the sealed test, once · ⑥ the live demo.
 
-## 🌐 How the engine will respond *(illustrative)*
+## 🌐 What the engine returns
+
+`POST /api/score` with a raw application ([try it](https://credit-risk-engine-dhib.onrender.com/docs)):
 
 ```json
 {
-  "probability_of_default": 0.083,
-  "risk_band": "B",
-  "decision": "APPROVE",
-  "expected_loss": 846.60,
-  "top_risk_factors": ["Credit cards fairly utilised (41.2%)", "Debt consolidation loan"],
-  "top_protective_factors": ["Short 36-month term", "Income comfortably covers payments"]
+  "probability_of_default": 0.2879,
+  "risk_band": "R5",
+  "risk_band_label": "high risk",
+  "decision": "DECLINE",
+  "decision_rule": "PD >= 27.5%",
+  "loan_amount": 10075.0,
+  "term_months": 60,
+  "expected_loss_usd": 1817.22,
+  "reasons": [{"reason": "Loan term: 60 months", "impact": 0.6747}, {"reason": "Credit score (FICO): 660", "impact": 0.2338}, {"reason": "Months since the most recent credit inquiry: 0 months", "impact": 0.1639}, {"reason": "Total bankcard limit: $3,300", "impact": 0.1539}],
+  "strengths": [{"reason": "Accounts opened in the last 24 months: 2", "impact": -0.1667}, {"reason": "Job title (historical default rate of similar titles): 14.0%", "impact": -0.1342}],
+  "missing_fields": ["mths_since_last_record", "mths_since_recent_bc_dlq", "mths_since_recent_revol_delinq"],
+  "model": {"name": "M3-B-mono-nozip", "version": "1.0.0"}
 }
 ```
 
-The model itself returns only `probability_of_default`. The band, decision, expected loss and reasons come from the decision layer and SHAP explanations.
-*Numbers are placeholders until models are trained.*
+A real response from the live API (a 2015 applicant from the validation set; this loan was in fact repaid: a PD is a probability, not a verdict). Only `loan_amnt` and `term` are required; any of the 65 input fields can be added, and missing ones are listed back.
 
 ## 📁 Repository structure
 
@@ -149,7 +180,13 @@ The model itself returns only `probability_of_default`. The band, decision, expe
 ├── src/preprocessing_v2/          # pipeline code, one module per stage
 │   ├── restore.py  split.py  features.py  pipeline.py
 │   └── export.py   audits.py  report.py   inference.py  run.py
-├── tests/                         # fresh-session inference test
+├── src/modeling/                  # evaluation report card, reason codes, decision layer
+├── src/engine/                    # CreditRiskEngine: raw application -> decision JSON
+├── models/                        # M0-M4 + final/ stages 1-5 (plan, notebook, PDF, results each)
+│   └── final/04_scoring_package/bundle/   # model, preprocessor, calibrator, policy + checksums
+├── deploy/                        # FastAPI app, web page, Docker / Space builders
+├── Dockerfile  render.yaml        # live deployment (Render)
+├── tests/                         # fresh-session tests (preprocessing, engine) + API tests
 ├── notebooks/                     # data inspection, preprocessing V1 (Steps 1-10), V2 walkthrough
 ├── reports/                       # EDA reports, V1 audit tables
 ├── docs/                          # architecture diagram, model strategy PDF (+ generators)
@@ -181,10 +218,20 @@ pip install -r requirements.txt
    print(features.shape)   # (1, 190) - missing fields are imputed
    ```
 
+5. Run the engine and the website locally:
+   ```bash
+   pip install -r deploy/requirements.txt
+   python -m uvicorn deploy.app.main:app --port 7860   # open http://localhost:7860
+   ```
+   ```python
+   from src.engine import CreditRiskEngine
+   CreditRiskEngine().score({"loan_amnt": 12000, "term": 36, "fico_range_low": 700, "annual_inc": 72000})
+   ```
+
 ## 🛠️ Tech stack
 
-Python · pandas · NumPy · scikit-learn · PyArrow / Parquet · joblib · ReportLab · Sweetviz.
-Planned: LightGBM · XGBoost · SHAP · FastAPI.
+Python · pandas · NumPy · scikit-learn · LightGBM · XGBoost · SHAP (LightGBM `pred_contrib`) · FastAPI · Docker · Render ·
+Kaggle (training runs) · PyArrow / Parquet · joblib · ReportLab · Sweetviz.
 
 ## 👤 Author
 
